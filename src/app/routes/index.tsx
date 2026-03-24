@@ -8,6 +8,10 @@ import { PrototypeAuthGuard } from "./PrototypeAuthGuard";
 import { PlaceholderPage } from "./PlaceholderPage";
 import { DevPage } from "@/features/dev/DevPage";
 import { WelcomePage } from "@/features/auth/pages/WelcomePage";
+import { RegisterEmailPage } from "@/features/auth/pages/RegisterEmailPage";
+import { RegisterVerifyPage } from "@/features/auth/pages/RegisterVerifyPage";
+import { LoginEmailPage } from "@/features/auth/pages/LoginEmailPage";
+import { LoginVerifyPage } from "@/features/auth/pages/LoginVerifyPage";
 
 export const router = createBrowserRouter([
   {
@@ -23,14 +27,14 @@ export const router = createBrowserRouter([
         element: <PublicLayout />,
         children: [
           { path: "/welcome", element: <WelcomePage /> },
-          { path: "/register/email", element: <PlaceholderPage title="Register — Email" /> },
-          { path: "/register/verify", element: <PlaceholderPage title="Register — OTP Verification" /> },
+          { path: "/register/email", element: <RegisterEmailPage /> },
+          { path: "/register/verify", element: <RegisterVerifyPage /> },
           { path: "/register/2fa-setup", element: <PlaceholderPage title="Register — 2FA Setup" /> },
           { path: "/register/profile", element: <PlaceholderPage title="Register — Profile Setup" /> },
           { path: "/consent", element: <PlaceholderPage title="Consent" /> },
           { path: "/login", element: <PlaceholderPage title="Login" /> },
-          { path: "/login/email", element: <PlaceholderPage title="Login — Email" /> },
-          { path: "/login/verify", element: <PlaceholderPage title="Login — OTP Verification" /> },
+          { path: "/login/email", element: <LoginEmailPage /> },
+          { path: "/login/verify", element: <LoginVerifyPage /> },
           { path: "/login/2fa", element: <PlaceholderPage title="Login — 2FA" /> },
           { path: "/privacy", element: <PlaceholderPage title="Privacy Policy" /> },
           { path: "/terms", element: <PlaceholderPage title="Terms of Service" /> },

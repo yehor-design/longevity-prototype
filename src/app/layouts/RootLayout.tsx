@@ -1,8 +1,7 @@
 import { useEffect } from "react";
 import { Outlet } from "react-router";
 import { Providers } from "@/app/providers";
-import { PrototypeBadge } from "@/components/common/PrototypeBadge";
-import { DevToolbar } from "@/components/common/DevToolbar";
+import { PrototypeFab } from "@/components/common/PrototypeFab";
 import { ToastProvider } from "@/components/feedback/ToastProvider";
 import { useThemeStore } from "@/stores/themeStore";
 
@@ -11,7 +10,7 @@ import { useThemeStore } from "@/stores/themeStore";
  *
  * Responsibilities:
  * - Initialises the theme (applies dark/light class to <html>)
- * - Mounts global UI: Toaster, PrototypeBadge, DevToolbar
+ * - Mounts global UI: Toaster, PrototypeFab
  * - Wraps all children with required context providers
  */
 export function RootLayout() {
@@ -28,8 +27,7 @@ export function RootLayout() {
     <Providers>
       <Outlet />
       <ToastProvider />
-      <PrototypeBadge />
-      <DevToolbar />
+      <PrototypeFab />
     </Providers>
   );
 }

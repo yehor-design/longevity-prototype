@@ -3,23 +3,17 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useAuthStore } from "@/stores/authStore";
 import { useMockDelay } from "@/hooks/useMockDelay";
-import { ROLE_HOME, ROUTES } from "@/lib/constants";
-import type { UserRole } from "@/types";
-import { ArrowRight, Zap } from "lucide-react";
+import { ROUTES } from "@/lib/constants";
+import { ArrowRight } from "lucide-react";
 
 /**
- * Entry-point welcome page with auth CTAs and quick-login prototype bypass.
+ * Entry-point welcome page with auth CTAs.
  */
 export function WelcomePage() {
   const navigate = useNavigate();
   const { quickLogin } = useAuthStore();
   const { loading: googleLoading, withDelay } = useMockDelay(600, 900);
   const { loading: emailLoading, withDelay: withEmailDelay } = useMockDelay(300, 500);
-
-  const handleQuickLogin = (role: UserRole) => {
-    quickLogin(role);
-    navigate(ROLE_HOME[role]);
-  };
 
   const handleGoogleSignIn = () => {
     withDelay(() => {
@@ -99,32 +93,6 @@ export function WelcomePage() {
         >
           Already have an account? Sign in
         </Button>
-      </div>
-
-      {/* Quick Login — prototype bypass */}
-      <div className="border rounded-xl p-4 bg-amber-500/5 border-amber-500/20 space-y-3">
-        <div className="flex items-center gap-2">
-          <Zap size={14} className="text-amber-500" />
-          <span className="text-xs font-semibold text-amber-600 dark:text-amber-400 uppercase tracking-wider">
-            Prototype Quick Login
-          </span>
-        </div>
-        <p className="text-xs text-muted-foreground">
-          Skip the full auth flow. Instantly log in as any role:
-        </p>
-        <div className="flex gap-2 flex-wrap">
-          {(["patient", "doctor", "admin"] as UserRole[]).map((role) => (
-            <Button
-              key={role}
-              size="sm"
-              variant="outline"
-              className="capitalize text-xs h-7 border-amber-500/30 hover:bg-amber-500/10"
-              onClick={() => handleQuickLogin(role)}
-            >
-              {role}
-            </Button>
-          ))}
-        </div>
       </div>
     </div>
   );
