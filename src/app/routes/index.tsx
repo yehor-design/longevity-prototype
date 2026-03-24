@@ -22,11 +22,13 @@ export const router = createBrowserRouter([
       // Redirect root → welcome
       { path: "/", element: <Navigate to="/welcome" replace /> },
 
+      // WelcomePage is a full-screen split layout — rendered outside PublicLayout
+      { path: "/welcome", element: <WelcomePage /> },
+
       // ── Public routes ──────────────────────────────────────────────────
       {
         element: <PublicLayout />,
         children: [
-          { path: "/welcome", element: <WelcomePage /> },
           { path: "/register/email", element: <RegisterEmailPage /> },
           { path: "/register/verify", element: <RegisterVerifyPage /> },
           { path: "/register/2fa-setup", element: <PlaceholderPage title="Register — 2FA Setup" /> },
