@@ -59,14 +59,14 @@ import type { UserRole } from "@/types";
 // All routes for the inventory table
 const ALL_ROUTES = [
   { path: "/welcome", layout: "Public", auth: false, status: "Built" },
-  { path: "/register/email", layout: "Public", auth: false, status: "Placeholder" },
-  { path: "/register/verify", layout: "Public", auth: false, status: "Placeholder" },
+  { path: "/register/email", layout: "Public", auth: false, status: "Redirect → /welcome" },
+  { path: "/register/verify", layout: "Public", auth: false, status: "Built" },
   { path: "/register/2fa-setup", layout: "Public", auth: false, status: "Placeholder" },
   { path: "/register/profile", layout: "Public", auth: false, status: "Placeholder" },
   { path: "/consent", layout: "Public", auth: false, status: "Placeholder" },
   { path: "/login", layout: "Public", auth: false, status: "Placeholder" },
-  { path: "/login/email", layout: "Public", auth: false, status: "Placeholder" },
-  { path: "/login/verify", layout: "Public", auth: false, status: "Placeholder" },
+  { path: "/login/email", layout: "Public", auth: false, status: "Built" },
+  { path: "/login/verify", layout: "Public", auth: false, status: "Built" },
   { path: "/login/2fa", layout: "Public", auth: false, status: "Placeholder" },
   { path: "/privacy", layout: "Public", auth: false, status: "Placeholder" },
   { path: "/terms", layout: "Public", auth: false, status: "Placeholder" },
