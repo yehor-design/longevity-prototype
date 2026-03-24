@@ -1,0 +1,1 @@
+// consultations/types placeholder
