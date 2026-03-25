@@ -16,7 +16,7 @@ export function AuthBottomBadges({ className }: AuthBottomBadgesProps) {
   return (
     <div
       className={cn(
-        "fixed bottom-3 left-1/2 z-30 flex -translate-x-1/2 items-center gap-6 lg:bottom-10 lg:left-[calc(25vw+8px)]",
+        "fixed bottom-6 left-1/2 z-30 flex -translate-x-1/2 items-center gap-6 lg:left-[calc(25vw+8px)]",
         className,
       )}
     >

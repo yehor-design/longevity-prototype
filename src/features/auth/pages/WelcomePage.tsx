@@ -1,6 +1,5 @@
 import { type FormEvent, useState } from "react";
 import { useNavigate } from "react-router";
-import { useAuthStore } from "@/stores/authStore";
 import { useMockDelay } from "@/hooks/useMockDelay";
 import { ROUTES } from "@/lib/constants";
 import { AuthBottomBadges } from "@/features/auth/components/AuthBottomBadges";
@@ -38,7 +37,6 @@ function GoogleIcon() {
  */
 export function WelcomePage() {
   const navigate = useNavigate();
-  const { quickLogin } = useAuthStore();
   const [email, setEmail] = useState("");
   const { loading: emailLoading, withDelay: withEmailDelay } = useMockDelay(300, 500);
   const { loading: googleLoading, withDelay: withGoogleDelay } = useMockDelay(600, 900);
@@ -55,8 +53,7 @@ export function WelcomePage() {
 
   const handleGoogleSignIn = () => {
     withGoogleDelay(() => {
-      quickLogin("patient");
-      navigate(ROUTES.REGISTER_PROFILE);
+      navigate(ROUTES.REGISTER_GOOGLE_2FA);
     });
   };
 

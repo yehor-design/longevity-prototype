@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useMockDelay } from "@/hooks/useMockDelay";
 import verifyLogoPng from "@/assets/auth/verify-logo.png";
+import caretLeftSvg from "@/assets/auth/caret-left.svg";
 import { AuthBottomBadges } from "./AuthBottomBadges";
 import { VerifyHeroPanel } from "./VerifyHeroPanel";
 import { cn } from "@/lib/utils";
@@ -185,7 +186,7 @@ export function VerifyEmailScreen({ email, onVerified, onBack }: VerifyEmailScre
         className="absolute left-4 top-4 z-30 inline-flex items-center justify-center gap-[6px] rounded-[6px] px-[10px] py-[6px] text-[#18181b] hover:opacity-80"
         style={{ fontFamily: "Inter, sans-serif", fontSize: "13px", lineHeight: "20px", fontWeight: 500 }}
       >
-        <span aria-hidden="true" className="text-[15px] leading-[15px]">{"\u2190"}</span>
+        <img alt="" src={caretLeftSvg} aria-hidden="true" className="size-[15px]" />
         <span>Back</span>
       </button>
 
@@ -260,49 +261,43 @@ export function VerifyEmailScreen({ email, onVerified, onBack }: VerifyEmailScre
       <div className="relative z-10 hidden h-full lg:flex">
         <div className="flex h-full w-[calc(50vw-16px)] items-center justify-center px-6">
           <div className="flex w-full max-w-[460px] flex-col items-center gap-6">
-            <div className="flex w-[360px] flex-col items-center gap-4 text-center">
-              <div
-                className="size-12"
-                style={{
-                  boxShadow:
-                    "0px 142.57px 25.532px 0px rgba(7,49,27,0), 0px 91.2px 25.532px 0px rgba(7,49,27,0.01), 0px 51.37px 25.532px 0px rgba(7,49,27,0.05), 0px 22.774px 22.774px 0px rgba(7,49,27,0.08), 0px 5.719px 12.562px 0px rgba(7,49,27,0.09)",
-                }}
-              >
-                <img
-                  alt=""
-                  src={verifyLogoPng}
-                  className="size-full object-cover"
-                  style={{ backgroundColor: "transparent" }}
-                />
-              </div>
-
-              <h1
-                className="w-full font-semibold text-[#181d27]"
-                style={{ fontFamily: "Inter, sans-serif", fontSize: "30px", lineHeight: "38px" }}
-              >
-                Verify your email
-              </h1>
-              <p
-                className="w-full font-normal text-[#535862]"
-                style={{ fontFamily: "Inter, sans-serif", fontSize: "16px", lineHeight: "24px" }}
-              >
-                We&apos;ve sent a 6-digit code to
-              </p>
-
-              <div
-                className="inline-flex items-center justify-center rounded-[999px] border border-[rgba(0,0,0,0.06)] bg-[#efefef] px-3 py-1.5"
-                style={{
-                  fontFamily: "Inter, sans-serif",
-                  fontSize: "14px",
-                  lineHeight: "20px",
-                  fontWeight: 500,
-                  color: "#232323",
-                }}
-              >
-                {email}
+            {/* Text section: logo+header block (gap-8) → email badge (gap-16 outer) */}
+          <div className="flex w-[360px] flex-col items-center gap-[16px]">
+            <div className="flex w-full flex-col items-center">
+              <div className="flex w-full flex-col items-center">
+                <div className="flex w-full flex-col gap-[12px] text-center">
+                  <h1
+                    className="w-full font-semibold text-[#181d27]"
+                    style={{ fontFamily: "Inter, sans-serif", fontSize: "30px", lineHeight: "38px" }}
+                  >
+                    Verify your email
+                  </h1>
+                  <p
+                    className="w-full font-normal text-[#535862]"
+                    style={{ fontFamily: "Inter, sans-serif", fontSize: "16px", lineHeight: "24px" }}
+                  >
+                    We&apos;ve sent a 6-digit code to
+                  </p>
+                </div>
               </div>
             </div>
 
+            <div
+              className="inline-flex items-center justify-center rounded-[999px] border border-[rgba(0,0,0,0.06)] bg-[#efefef] px-3 py-1.5"
+              style={{
+                fontFamily: "Inter, sans-serif",
+                fontSize: "14px",
+                lineHeight: "20px",
+                fontWeight: 500,
+                color: "#232323",
+              }}
+            >
+              {email}
+            </div>
+          </div>
+
+          {/* OTP slots + resend/timer in gap-[6px] wrapper (matches Figma) */}
+          <div className="flex w-[460px] flex-col items-start gap-[6px]">
             <div className="w-full" onClick={focusHiddenInput}>
               <OtpSlots code={otp} onClick={focusHiddenInput} />
             </div>
@@ -324,7 +319,7 @@ export function VerifyEmailScreen({ email, onVerified, onBack }: VerifyEmailScre
               </p>
 
               <div
-                className="flex items-center gap-2 text-[#535862]"
+                className="flex shrink-0 items-center gap-2 whitespace-nowrap text-[#535862]"
                 style={{ fontFamily: "Inter, sans-serif", fontSize: "14px", lineHeight: "20px", fontWeight: 500 }}
               >
                 <img alt="" src={CLOCK_ICON} className="size-3" />
@@ -333,6 +328,7 @@ export function VerifyEmailScreen({ email, onVerified, onBack }: VerifyEmailScre
                 </span>
               </div>
             </div>
+          </div>
           </div>
         </div>
       </div>

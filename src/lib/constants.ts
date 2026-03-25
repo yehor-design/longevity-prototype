@@ -7,6 +7,8 @@ export const ROUTES = {
   REGISTER_2FA: "/register/2fa-setup",
   REGISTER_PROFILE: "/register/profile",
   CONSENT: "/consent",
+  REGISTER_GOOGLE_2FA: "/register/google/2fa-setup",
+  REGISTER_GOOGLE_CONSENT: "/register/google/consent",
   LOGIN: "/login",
   LOGIN_EMAIL: "/login/email",
   LOGIN_VERIFY: "/login/verify",

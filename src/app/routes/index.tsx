@@ -11,6 +11,11 @@ import { WelcomePage } from "@/features/auth/pages/WelcomePage";
 import { RegisterVerifyPage } from "@/features/auth/pages/RegisterVerifyPage";
 import { LoginEmailPage } from "@/features/auth/pages/LoginEmailPage";
 import { LoginVerifyPage } from "@/features/auth/pages/LoginVerifyPage";
+import { Register2faPage } from "@/features/auth/pages/Register2faPage";
+import { RegisterProfilePage } from "@/features/auth/pages/RegisterProfilePage";
+import { RegisterConsentPage } from "@/features/auth/pages/RegisterConsentPage";
+import { RegisterGoogle2faPage } from "@/features/auth/pages/RegisterGoogle2faPage";
+import { RegisterGoogleConsentPage } from "@/features/auth/pages/RegisterGoogleConsentPage";
 
 export const router = createBrowserRouter([
   {
@@ -27,14 +32,17 @@ export const router = createBrowserRouter([
       { path: "/register/verify", element: <RegisterVerifyPage /> },
       { path: "/login/email", element: <LoginEmailPage /> },
       { path: "/login/verify", element: <LoginVerifyPage /> },
+      { path: "/register/2fa-setup", element: <Register2faPage /> },
+
+      { path: "/register/profile", element: <RegisterProfilePage /> },
+      { path: "/consent", element: <RegisterConsentPage /> },
+      { path: "/register/google/2fa-setup", element: <RegisterGoogle2faPage /> },
+      { path: "/register/google/consent", element: <RegisterGoogleConsentPage /> },
 
       // ── Public routes ──────────────────────────────────────────────────
       {
         element: <PublicLayout />,
         children: [
-          { path: "/register/2fa-setup", element: <PlaceholderPage title="Register — 2FA Setup" /> },
-          { path: "/register/profile", element: <PlaceholderPage title="Register — Profile Setup" /> },
-          { path: "/consent", element: <PlaceholderPage title="Consent" /> },
           { path: "/login", element: <PlaceholderPage title="Login" /> },
           { path: "/login/2fa", element: <PlaceholderPage title="Login — 2FA" /> },
           { path: "/privacy", element: <PlaceholderPage title="Privacy Policy" /> },
