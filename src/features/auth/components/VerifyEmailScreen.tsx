@@ -15,12 +15,13 @@ interface VerifyEmailScreenProps {
   email: string;
   onVerified: () => void;
   onBack: () => void;
+  title?: string;
 }
 
 /**
  * Shared 6-digit email verification screen (desktop 1:1 from Figma, mobile fallback).
  */
-export function VerifyEmailScreen({ email, onVerified, onBack }: VerifyEmailScreenProps) {
+export function VerifyEmailScreen({ email, onVerified, onBack, title = "{title}" }: VerifyEmailScreenProps) {
   const [otp, setOtp] = useState("");
   const [countdown, setCountdown] = useState(OTP_EXPIRATION_SECONDS);
   const { loading, withDelay } = useMockDelay(500, 800);
@@ -107,7 +108,7 @@ export function VerifyEmailScreen({ email, onVerified, onBack }: VerifyEmailScre
           className="font-semibold text-[#181d27]"
           style={{ fontFamily: "Inter, sans-serif", fontSize: "34px", lineHeight: "40px" }}
         >
-          Verify your email
+          {title}
         </h1>
         <p className="mt-2 text-base leading-6 text-[#535862]">
           We&apos;ve sent a 6-digit code to
@@ -149,7 +150,7 @@ export function VerifyEmailScreen({ email, onVerified, onBack }: VerifyEmailScre
                   className="w-full font-semibold text-[#181d27]"
                   style={{ fontFamily: "Inter, sans-serif", fontSize: "30px", lineHeight: "38px" }}
                 >
-                  Verify your email
+                  {title}
                 </h1>
                 <p className="w-full text-base leading-6 text-[#535862]">
                   We&apos;ve sent a 6-digit code to

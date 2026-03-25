@@ -11,6 +11,7 @@ import { WelcomePage } from "@/features/auth/pages/WelcomePage";
 import { RegisterVerifyPage } from "@/features/auth/pages/RegisterVerifyPage";
 import { LoginEmailPage } from "@/features/auth/pages/LoginEmailPage";
 import { LoginVerifyPage } from "@/features/auth/pages/LoginVerifyPage";
+import { Login2faPage } from "@/features/auth/pages/Login2faPage";
 import { Register2faPage } from "@/features/auth/pages/Register2faPage";
 import { RegisterProfilePage } from "@/features/auth/pages/RegisterProfilePage";
 import { RegisterConsentPage } from "@/features/auth/pages/RegisterConsentPage";
@@ -32,6 +33,7 @@ export const router = createBrowserRouter([
       { path: "/register/verify", element: <RegisterVerifyPage /> },
       { path: "/login/email", element: <LoginEmailPage /> },
       { path: "/login/verify", element: <LoginVerifyPage /> },
+      { path: "/login/2fa", element: <Login2faPage /> },
       { path: "/register/2fa-setup", element: <Register2faPage /> },
 
       { path: "/register/profile", element: <RegisterProfilePage /> },
@@ -44,7 +46,6 @@ export const router = createBrowserRouter([
         element: <PublicLayout />,
         children: [
           { path: "/login", element: <PlaceholderPage title="Login" /> },
-          { path: "/login/2fa", element: <PlaceholderPage title="Login — 2FA" /> },
           { path: "/privacy", element: <PlaceholderPage title="Privacy Policy" /> },
           { path: "/terms", element: <PlaceholderPage title="Terms of Service" /> },
           { path: "/ai-explanation", element: <PlaceholderPage title="AI Explanation" /> },
