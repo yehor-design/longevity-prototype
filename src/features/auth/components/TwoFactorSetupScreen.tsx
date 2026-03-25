@@ -1,10 +1,13 @@
 import { useState } from "react";
+import { Copy, Check } from "lucide-react";
 import caretLeftSvg from "@/assets/auth/caret-left.svg";
 import fingerprintSimpleSvg from "@/assets/auth/fingerprint-simple.svg";
 import qrCodeSvg from "@/assets/auth/qr-code.svg";
-import copyIconSvg from "@/assets/auth/copy-icon.svg";
 import { AuthHeroPanel } from "./AuthHeroPanel";
 import { AuthBottomBadges } from "./AuthBottomBadges";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 const MOCK_SETUP_KEY = "X92M-FU3P-J7ZL-T8WV-FU3P-J7ZL-T8WV";
 
@@ -41,56 +44,49 @@ export function TwoFactorSetupScreen({ onBack, onVerified, onCancel }: TwoFactor
       <AuthBottomBadges />
 
       {/* Back button */}
-      <button
+      <Button
         type="button"
+        variant="ghost"
         onClick={onBack}
-        className="absolute left-4 top-4 z-30 inline-flex items-center justify-center gap-[6px] rounded-[6px] px-[10px] py-[6px] text-[#18181b] hover:opacity-80"
-        style={{ fontFamily: "Inter, sans-serif", fontSize: "13px", lineHeight: "20px", fontWeight: 500 }}
+        className="absolute left-4 top-4 z-30 h-8 gap-1.5 rounded-md px-3 text-[13px] font-medium text-[#18181b]"
       >
         <img alt="" src={caretLeftSvg} aria-hidden="true" className="size-[15px]" />
-        <span>Back</span>
-      </button>
+        Back
+      </Button>
 
       {/* Left content panel */}
       <div className="relative z-10 flex h-full items-center justify-center lg:w-[calc(50vw-16px)]">
-        <div className="flex w-full max-w-[420px] flex-col items-center gap-[24px]">
+        <div className="flex w-full max-w-[420px] flex-col items-center gap-6">
 
-          {/* Header block — w-[350px] */}
-          <div className="flex w-[350px] flex-col items-center gap-[24px]">
+          {/* Header block */}
+          <div className="flex w-[350px] flex-col items-center gap-6">
             {/* Fingerprint icon */}
             <div
-              className="flex shrink-0 items-start rounded-[16px] p-[16px]"
-              style={{
-                width: 64,
-                height: 64,
-                backgroundColor: "rgba(5,150,105,0.12)",
-              }}
+              className="flex size-16 shrink-0 items-start rounded-2xl p-4"
+              style={{ backgroundColor: "rgba(5,150,105,0.12)" }}
             >
-              <img alt="" src={fingerprintSimpleSvg} aria-hidden="true" className="size-[32px]" />
+              <img alt="" src={fingerprintSimpleSvg} aria-hidden="true" className="size-8" />
             </div>
 
             {/* Title + subtitle */}
-            <div
-              className="flex w-full flex-col items-center gap-[8px] text-center"
-              style={{ fontFamily: "Inter, sans-serif", fontWeight: 500, fontStyle: "normal" }}
-            >
-              <p style={{ fontSize: "18px", lineHeight: "26px", color: "#0a0a0a" }}>
+            <div className="flex w-full flex-col items-center gap-2 text-center">
+              <p className="text-[18px] font-medium leading-[26px] text-[#0a0a0a]">
                 Set up two-factor authentication
               </p>
-              <p style={{ fontSize: "14px", lineHeight: "20px", color: "#6f6f77" }}>
+              <p className="text-sm leading-5 text-[#6f6f77]">
                 Add an extra layer of security. Scan the QR code or enter the setup key in your
                 authenticator app, then enter the 6-digit code from the app.
               </p>
             </div>
           </div>
 
-          {/* QR / manual block + form — w-[420px] */}
-          <div className="flex w-[420px] flex-col items-center gap-[40px]">
+          {/* QR / manual block + form */}
+          <div className="flex w-[420px] flex-col items-center gap-10">
 
             {/* Toggleable block */}
             {!showManual ? (
               /* ── QR code view ── */
-              <div className="flex flex-col items-center gap-[16px]" style={{ width: 264 }}>
+              <div className="flex flex-col items-center gap-4" style={{ width: 264 }}>
                 {/* QR code container */}
                 <div
                   className="relative shrink-0 bg-white"
@@ -101,258 +97,104 @@ export function TwoFactorSetupScreen({ onBack, onVerified, onCancel }: TwoFactor
                     border: "1px solid #e3eae4",
                   }}
                 >
-                  {/* QR code image */}
                   <img
                     alt="QR code for authenticator app"
                     src={qrCodeSvg}
                     className="absolute"
                     style={{ left: "20.69px", top: "20.69px", width: "220.623px", height: "220.623px" }}
                   />
-
                   {/* Corner markers */}
-                  <div
-                    className="absolute"
-                    style={{
-                      left: "12.66px",
-                      top: "12.66px",
-                      width: "20.056px",
-                      height: "20.056px",
-                      borderTop: "2.721px solid #39743f",
-                      borderLeft: "2.721px solid #39743f",
-                      borderRadius: "8.023px 0 0 0",
-                    }}
-                  />
-                  <div
-                    className="absolute"
-                    style={{
-                      left: "229.28px",
-                      top: "12.66px",
-                      width: "20.056px",
-                      height: "20.056px",
-                      borderTop: "2.721px solid #39743f",
-                      borderRight: "2.721px solid #39743f",
-                      borderRadius: "0 8.023px 0 0",
-                    }}
-                  />
-                  <div
-                    className="absolute"
-                    style={{
-                      left: "12.66px",
-                      top: "229.28px",
-                      width: "20.056px",
-                      height: "20.056px",
-                      borderBottom: "2.721px solid #39743f",
-                      borderLeft: "2.721px solid #39743f",
-                      borderRadius: "0 0 0 8.023px",
-                    }}
-                  />
-                  <div
-                    className="absolute"
-                    style={{
-                      left: "229.28px",
-                      top: "229.28px",
-                      width: "20.056px",
-                      height: "20.056px",
-                      borderBottom: "2.721px solid #39743f",
-                      borderRight: "2.721px solid #39743f",
-                      borderRadius: "0 0 8.023px 0",
-                    }}
-                  />
+                  <div className="absolute" style={{ left: "12.66px", top: "12.66px", width: "20.056px", height: "20.056px", borderTop: "2.721px solid #39743f", borderLeft: "2.721px solid #39743f", borderRadius: "8.023px 0 0 0" }} />
+                  <div className="absolute" style={{ left: "229.28px", top: "12.66px", width: "20.056px", height: "20.056px", borderTop: "2.721px solid #39743f", borderRight: "2.721px solid #39743f", borderRadius: "0 8.023px 0 0" }} />
+                  <div className="absolute" style={{ left: "12.66px", top: "229.28px", width: "20.056px", height: "20.056px", borderBottom: "2.721px solid #39743f", borderLeft: "2.721px solid #39743f", borderRadius: "0 0 0 8.023px" }} />
+                  <div className="absolute" style={{ left: "229.28px", top: "229.28px", width: "20.056px", height: "20.056px", borderBottom: "2.721px solid #39743f", borderRight: "2.721px solid #39743f", borderRadius: "0 0 8.023px 0" }} />
                 </div>
 
-                {/* Trouble scanning link */}
-                <button
+                <Button
                   type="button"
+                  variant="link"
                   onClick={() => setShowManual(true)}
-                  className="whitespace-nowrap hover:opacity-80"
-                  style={{
-                    fontFamily: "Inter, sans-serif",
-                    fontWeight: 500,
-                    fontStyle: "normal",
-                    fontSize: "14px",
-                    lineHeight: "20px",
-                    color: "#047857",
-                  }}
+                  className="h-auto p-0 text-sm font-medium text-primary"
                 >
                   Trouble scanning?
-                </button>
+                </Button>
               </div>
             ) : (
               /* ── Manual code view ── */
-              <div className="relative shrink-0" style={{ width: 420, height: 76 }}>
-                {/* White input container */}
-                <div
-                  className="absolute"
-                  style={{
-                    left: 0,
-                    top: 0,
-                    width: 420,
-                    height: 40,
-                    backgroundColor: "white",
-                    border: "1px solid rgba(0,0,0,0.08)",
-                    borderRadius: "12px",
-                  }}
-                />
+              <div className="flex w-full flex-col items-center gap-4">
+                {/* Setup key — read-only input + copy button */}
+                <div className="flex w-full items-center gap-2">
+                  <Input
+                    readOnly
+                    value={MOCK_SETUP_KEY}
+                    aria-label="Two-factor authentication setup key"
+                    className="h-10 flex-1 cursor-default border-[#d5d7da] bg-muted font-mono text-sm tracking-widest select-all focus-visible:ring-0 focus-visible:border-[#d5d7da]"
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="icon"
+                    onClick={handleCopy}
+                    className="h-10 w-10 shrink-0 border-[#d5d7da] bg-white shadow-[0px_1px_2px_0px_rgba(10,13,18,0.05)] transition-colors"
+                    aria-label={copied ? "Copied!" : "Copy setup key"}
+                    title={copied ? "Copied!" : "Copy setup key"}
+                  >
+                    {copied
+                      ? <Check className="size-4 text-primary" />
+                      : <Copy className="size-4" />
+                    }
+                  </Button>
+                </div>
 
-                {/* Setup key text */}
-                <p
-                  className="absolute whitespace-nowrap"
-                  style={{
-                    left: 16,
-                    top: 8,
-                    fontFamily: "Inter, sans-serif",
-                    fontWeight: 500,
-                    fontStyle: "normal",
-                    fontSize: "16px",
-                    lineHeight: "24px",
-                    color: "#6f6f77",
-                  }}
-                >
-                  {MOCK_SETUP_KEY}
-                </p>
-
-                {/* Vertical divider */}
-                <div
-                  className="absolute"
-                  style={{
-                    left: 381,
-                    top: 0,
-                    width: 1,
-                    height: 40,
-                    backgroundColor: "#e4e4e7",
-                  }}
-                />
-
-                {/* Copy icon button */}
-                <button
+                <Button
                   type="button"
-                  onClick={handleCopy}
-                  className="absolute hover:opacity-70 transition-opacity"
-                  style={{ left: 392, top: 12, width: 16, height: 16 }}
-                  aria-label={copied ? "Copied!" : "Copy setup key"}
-                  title={copied ? "Copied!" : "Copy setup key"}
-                >
-                  <img alt="" src={copyIconSvg} className="size-full" />
-                </button>
-
-                {/* Show QR code instead link */}
-                <button
-                  type="button"
+                  variant="link"
                   onClick={() => setShowManual(false)}
-                  className="absolute whitespace-nowrap hover:opacity-80"
-                  style={{
-                    left: "50%",
-                    top: 56,
-                    transform: "translateX(-50%)",
-                    fontFamily: "Inter, sans-serif",
-                    fontWeight: 500,
-                    fontStyle: "normal",
-                    fontSize: "14px",
-                    lineHeight: "20px",
-                    color: "#047857",
-                  }}
+                  className="h-auto p-0 text-sm font-medium text-primary"
                 >
                   Show QR code instead
-                </button>
+                </Button>
               </div>
             )}
 
             {/* Form */}
-            <div className="flex w-full flex-col items-center gap-[16px]">
+            <div className="flex w-full flex-col gap-4">
               {/* Verification code input */}
-              <div className="flex w-full flex-col gap-[6px]">
-                <label
-                  htmlFor="totp-code"
-                  className="whitespace-nowrap"
-                  style={{
-                    fontFamily: "Inter, sans-serif",
-                    fontWeight: 500,
-                    fontStyle: "normal",
-                    fontSize: "14px",
-                    lineHeight: "20px",
-                    color: "#414651",
-                  }}
-                >
+              <div className="flex w-full flex-col gap-1.5">
+                <Label htmlFor="totp-code" className="text-sm font-medium text-[#414651]">
                   Verification code
-                </label>
-                <div
-                  className="flex items-center gap-[8px] bg-white px-[14px] py-[10px] rounded-[8px]"
-                  style={{
-                    border: "1px solid #d5d7da",
-                    boxShadow: "0px 1px 2px 0px rgba(10,13,18,0.05)",
-                  }}
-                >
-                  <input
-                    id="totp-code"
-                    type="text"
-                    inputMode="numeric"
-                    autoComplete="one-time-code"
-                    maxLength={6}
-                    value={code}
-                    onChange={(e) => setCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
-                    placeholder="Enter 6-digit code from your app"
-                    className="flex-1 min-w-0 bg-transparent outline-none"
-                    style={{
-                      fontFamily: "Inter, sans-serif",
-                      fontWeight: 400,
-                      fontStyle: "normal",
-                      fontSize: "16px",
-                      lineHeight: "24px",
-                      color: "#0a0a0a",
-                    }}
-                  />
-                </div>
+                </Label>
+                <Input
+                  id="totp-code"
+                  type="text"
+                  inputMode="numeric"
+                  autoComplete="one-time-code"
+                  maxLength={6}
+                  value={code}
+                  onChange={(e) => setCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
+                  placeholder="Enter 6-digit code from your app"
+                  className="h-11 border-[#d5d7da] bg-white px-4 text-base shadow-[0px_1px_2px_0px_rgba(10,13,18,0.05)] placeholder:text-[#717680]"
+                />
               </div>
 
               {/* Buttons */}
-              <div className="flex w-full flex-col gap-[8px]">
-                {/* Verify & Enable 2FA */}
-                <button
+              <div className="flex w-full flex-col gap-2">
+                <Button
                   type="button"
                   onClick={handleVerify}
-                  className="relative flex w-full items-center justify-center overflow-hidden rounded-[6px] px-[16px] py-[10px] hover:opacity-90 transition-opacity"
-                  style={{
-                    backgroundColor: "#047857",
-                    boxShadow: "0px 1px 2px 0px rgba(4,120,87,0.4), 0px 0px 0px 1px #065f46",
-                  }}
+                  disabled={code.trim().length !== 6}
+                  className="h-10 w-full rounded-lg text-sm font-medium"
                 >
-                  <span
-                    className="relative whitespace-nowrap"
-                    style={{
-                      fontFamily: "Inter, sans-serif",
-                      fontWeight: 500,
-                      fontStyle: "normal",
-                      fontSize: "14px",
-                      lineHeight: "20px",
-                      color: "rgba(255,255,255,0.88)",
-                    }}
-                  >
-                    Verify &amp; Enable 2FA
-                  </span>
-                  {/* Inner top highlight */}
-                  <div className="pointer-events-none absolute inset-0 rounded-[inherit] shadow-[inset_0px_0.75px_0px_0px_rgba(255,255,255,0.2)]" />
-                </button>
-
-                {/* Cancel */}
-                <button
+                  Verify &amp; Enable 2FA
+                </Button>
+                <Button
                   type="button"
+                  variant="ghost"
                   onClick={onCancel}
-                  className="flex w-full items-center justify-center rounded-[6px] px-[16px] py-[10px] hover:opacity-70 transition-opacity"
+                  className="h-10 w-full rounded-lg text-sm font-medium"
                 >
-                  <span
-                    className="whitespace-nowrap"
-                    style={{
-                      fontFamily: "Inter, sans-serif",
-                      fontWeight: 500,
-                      fontStyle: "normal",
-                      fontSize: "14px",
-                      lineHeight: "20px",
-                      color: "#18181b",
-                    }}
-                  >
-                    Cancel
-                  </span>
-                </button>
+                  Cancel
+                </Button>
               </div>
             </div>
           </div>

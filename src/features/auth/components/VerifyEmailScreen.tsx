@@ -4,7 +4,8 @@ import verifyLogoPng from "@/assets/auth/verify-logo.png";
 import caretLeftSvg from "@/assets/auth/caret-left.svg";
 import { AuthBottomBadges } from "./AuthBottomBadges";
 import { VerifyHeroPanel } from "./VerifyHeroPanel";
-import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from "@/components/ui/input-otp";
 
 const CLOCK_ICON = "https://www.figma.com/api/mcp/asset/678781a6-95f1-405a-820d-5c1494085d88";
 const OTP_DIGITS = 6;
@@ -16,102 +17,6 @@ interface VerifyEmailScreenProps {
   onBack: () => void;
 }
 
-interface OtpSlotsProps {
-  code: string;
-  onClick: () => void;
-  compact?: boolean;
-}
-
-function OtpSlots({ code, onClick, compact = false }: OtpSlotsProps) {
-  const size = compact ? 48 : 64;
-  const textSize = compact ? "34px" : "48px";
-  const lineHeight = compact ? "42px" : "60px";
-  const tracking = compact ? "-0.68px" : "-0.96px";
-  const slotRadius = compact ? "8px" : "10px";
-  const dashWidth = compact ? "20px" : "28px";
-
-  const digits = Array.from({ length: OTP_DIGITS }, (_, index) => code[index] ?? "0");
-
-  return (
-    <div className="flex items-center gap-2">
-      {digits.slice(0, 3).map((digit, index) => (
-        <button
-          key={`left-${index}`}
-          type="button"
-          onClick={onClick}
-          className="cursor-text border border-[#d5d7da] bg-white px-2 py-[2px] shadow-[0px_1px_2px_0px_rgba(10,13,18,0.05)]"
-          style={{
-            width: `${size}px`,
-            minHeight: `${size}px`,
-            borderRadius: slotRadius,
-          }}
-        >
-          <span
-            className={cn(
-              "block w-full text-center font-medium",
-              code[index] ? "text-[#181d27]" : "text-[#d5d7da]",
-            )}
-            style={{
-              fontFamily: "Inter, sans-serif",
-              fontSize: textSize,
-              lineHeight,
-              letterSpacing: tracking,
-            }}
-          >
-            {digit}
-          </span>
-        </button>
-      ))}
-
-      <div
-        className="flex items-center justify-center text-[#d5d7da] font-medium"
-        style={{
-          width: dashWidth,
-          height: `${size}px`,
-          fontFamily: "Inter, sans-serif",
-          fontSize: compact ? "44px" : "60px",
-          lineHeight: compact ? "52px" : "72px",
-          letterSpacing: compact ? "-0.88px" : "-1.2px",
-        }}
-      >
-        -
-      </div>
-
-      {digits.slice(3).map((digit, index) => {
-        const absoluteIndex = index + 3;
-        return (
-          <button
-            key={`right-${index}`}
-            type="button"
-            onClick={onClick}
-            className="cursor-text border border-[#d5d7da] bg-white px-2 py-[2px] shadow-[0px_1px_2px_0px_rgba(10,13,18,0.05)]"
-            style={{
-              width: `${size}px`,
-              minHeight: `${size}px`,
-              borderRadius: slotRadius,
-            }}
-          >
-            <span
-              className={cn(
-                "block w-full text-center font-medium",
-                code[absoluteIndex] ? "text-[#181d27]" : "text-[#d5d7da]",
-              )}
-              style={{
-                fontFamily: "Inter, sans-serif",
-                fontSize: textSize,
-                lineHeight,
-                letterSpacing: tracking,
-              }}
-            >
-              {digit}
-            </span>
-          </button>
-        );
-      })}
-    </div>
-  );
-}
-
 /**
  * Shared 6-digit email verification screen (desktop 1:1 from Figma, mobile fallback).
  */
@@ -119,16 +24,13 @@ export function VerifyEmailScreen({ email, onVerified, onBack }: VerifyEmailScre
   const [otp, setOtp] = useState("");
   const [countdown, setCountdown] = useState(OTP_EXPIRATION_SECONDS);
   const { loading, withDelay } = useMockDelay(500, 800);
-  const hiddenInputRef = useRef<HTMLInputElement>(null);
   const hasTriggeredRef = useRef(false);
 
   useEffect(() => {
     if (countdown <= 0) return;
-
     const timer = window.setInterval(() => {
-      setCountdown((value) => Math.max(value - 1, 0));
+      setCountdown((v) => Math.max(v - 1, 0));
     }, 1000);
-
     return () => window.clearInterval(timer);
   }, [countdown]);
 
@@ -138,60 +40,53 @@ export function VerifyEmailScreen({ email, onVerified, onBack }: VerifyEmailScre
       withDelay(onVerified);
       return;
     }
-
     if (otp.length < OTP_DIGITS) {
       hasTriggeredRef.current = false;
     }
   }, [otp, loading, onVerified, withDelay]);
 
-  const focusHiddenInput = () => {
-    hiddenInputRef.current?.focus();
-  };
-
-  const handleOtpChange = (rawValue: string) => {
-    const nextValue = rawValue.replace(/\D/g, "").slice(0, OTP_DIGITS);
-    setOtp(nextValue);
-  };
-
   const handleResend = () => {
     setOtp("");
     setCountdown(OTP_EXPIRATION_SECONDS);
     hasTriggeredRef.current = false;
-    hiddenInputRef.current?.focus();
   };
 
   const minutes = String(Math.floor(countdown / 60)).padStart(2, "0");
   const seconds = String(countdown % 60).padStart(2, "0");
 
+  const otpInput = (slotClassName: string, shouldAutoFocus = false) => (
+    <InputOTP maxLength={6} value={otp} onChange={setOtp} autoFocus={shouldAutoFocus}>
+      {[0, 1, 2].map((i) => (
+        <InputOTPGroup key={i}>
+          <InputOTPSlot index={i} className={slotClassName} />
+        </InputOTPGroup>
+      ))}
+      <InputOTPSeparator />
+      {[3, 4, 5].map((i) => (
+        <InputOTPGroup key={i}>
+          <InputOTPSlot index={i} className={slotClassName} />
+        </InputOTPGroup>
+      ))}
+    </InputOTP>
+  );
+
   return (
     <div className="relative h-[100dvh] max-h-[100dvh] w-full overflow-hidden bg-[#f7f7f8]">
       <VerifyHeroPanel />
 
-      <input
-        ref={hiddenInputRef}
-        autoFocus
-        type="text"
-        inputMode="numeric"
-        pattern="[0-9]*"
-        autoComplete="one-time-code"
-        value={otp}
-        onChange={(event) => handleOtpChange(event.target.value)}
-        className="pointer-events-none absolute h-px w-px opacity-0"
-        aria-label="Verification code"
-      />
-
-      <button
+      <Button
         type="button"
+        variant="ghost"
         onClick={onBack}
-        className="absolute left-4 top-4 z-30 inline-flex items-center justify-center gap-[6px] rounded-[6px] px-[10px] py-[6px] text-[#18181b] hover:opacity-80"
-        style={{ fontFamily: "Inter, sans-serif", fontSize: "13px", lineHeight: "20px", fontWeight: 500 }}
+        className="absolute left-4 top-4 z-30 h-8 gap-1.5 rounded-md px-3 text-[13px] font-medium text-[#18181b]"
       >
         <img alt="" src={caretLeftSvg} aria-hidden="true" className="size-[15px]" />
-        <span>Back</span>
-      </button>
+        Back
+      </Button>
 
       <AuthBottomBadges />
 
+      {/* Mobile */}
       <div className="lg:hidden relative z-10 flex h-full flex-col items-center justify-center px-5 pb-24 pt-8 text-center">
         <div
           className="mb-6 size-12 shrink-0"
@@ -214,121 +109,80 @@ export function VerifyEmailScreen({ email, onVerified, onBack }: VerifyEmailScre
         >
           Verify your email
         </h1>
-        <p
-          className="mt-2 text-[#535862]"
-          style={{ fontFamily: "Inter, sans-serif", fontSize: "16px", lineHeight: "24px" }}
-        >
+        <p className="mt-2 text-base leading-6 text-[#535862]">
           We&apos;ve sent a 6-digit code to
         </p>
 
-        <div
-          className="mt-4 inline-flex items-center justify-center rounded-[999px] border border-[rgba(0,0,0,0.06)] bg-[#efefef] px-3 py-1.5"
-          style={{ fontFamily: "Inter, sans-serif", fontSize: "14px", lineHeight: "20px", fontWeight: 500, color: "#232323" }}
-        >
+        <div className="mt-4 inline-flex items-center justify-center rounded-full border border-black/[0.06] bg-[#efefef] px-3 py-1.5 text-sm font-medium text-[#232323]">
           {email}
         </div>
 
-        <div className="mt-7" onClick={focusHiddenInput}>
-          <OtpSlots code={otp} onClick={focusHiddenInput} compact />
+        <div className="mt-7">
+          {otpInput("h-12 w-12 text-[34px] font-medium tracking-tighter rounded-lg bg-white shadow-[0px_1px_2px_0px_rgba(10,13,18,0.05)]", false)}
         </div>
 
-        <p
-          className="mt-3 text-[#535862]"
-          style={{ fontFamily: "Inter, sans-serif", fontSize: "14px", lineHeight: "20px" }}
-        >
+        <p className="mt-3 text-sm text-[#535862]">
           Didn&apos;t get a code?{" "}
-          <button
-            type="button"
+          <Button
+            variant="link"
+            className="h-auto p-0 text-sm text-[#535862] underline underline-offset-1"
             onClick={handleResend}
-            className="underline decoration-solid underline-offset-1"
           >
             Click to resend
-          </button>
+          </Button>
           .
         </p>
 
-        <div
-          className="mt-2 flex items-center gap-2 text-[#535862]"
-          style={{ fontFamily: "Inter, sans-serif", fontSize: "14px", lineHeight: "20px", fontWeight: 500 }}
-        >
+        <div className="mt-2 flex items-center gap-2 text-sm font-medium text-[#535862]">
           <img alt="" src={CLOCK_ICON} className="size-3" />
-          <span>
-            Expires in {minutes}:{seconds}
-          </span>
+          <span>Expires in {minutes}:{seconds}</span>
         </div>
       </div>
 
+      {/* Desktop */}
       <div className="relative z-10 hidden h-full lg:flex">
         <div className="flex h-full w-[calc(50vw-16px)] items-center justify-center px-6">
           <div className="flex w-full max-w-[460px] flex-col items-center gap-6">
-            {/* Text section: logo+header block (gap-8) → email badge (gap-16 outer) */}
-          <div className="flex w-[360px] flex-col items-center gap-[16px]">
-            <div className="flex w-full flex-col items-center">
-              <div className="flex w-full flex-col items-center">
-                <div className="flex w-full flex-col gap-[12px] text-center">
-                  <h1
-                    className="w-full font-semibold text-[#181d27]"
-                    style={{ fontFamily: "Inter, sans-serif", fontSize: "30px", lineHeight: "38px" }}
+            <div className="flex w-[360px] flex-col items-center gap-4">
+              <div className="flex w-full flex-col gap-3 text-center">
+                <h1
+                  className="w-full font-semibold text-[#181d27]"
+                  style={{ fontFamily: "Inter, sans-serif", fontSize: "30px", lineHeight: "38px" }}
+                >
+                  Verify your email
+                </h1>
+                <p className="w-full text-base leading-6 text-[#535862]">
+                  We&apos;ve sent a 6-digit code to
+                </p>
+              </div>
+
+              <div className="inline-flex items-center justify-center rounded-full border border-black/[0.06] bg-[#efefef] px-3 py-1.5 text-sm font-medium text-[#232323]">
+                {email}
+              </div>
+            </div>
+
+            <div className="flex w-[460px] flex-col items-start gap-1.5">
+              {otpInput("h-16 w-16 text-[48px] font-medium tracking-tighter rounded-lg bg-white shadow-[0px_1px_2px_0px_rgba(10,13,18,0.05)]", true)}
+
+              <div className="flex w-full items-center justify-between">
+                <p className="text-sm text-[#535862]">
+                  Didn&apos;t get a code?{" "}
+                  <Button
+                    variant="link"
+                    className="h-auto p-0 text-sm text-[#535862] underline underline-offset-1"
+                    onClick={handleResend}
                   >
-                    Verify your email
-                  </h1>
-                  <p
-                    className="w-full font-normal text-[#535862]"
-                    style={{ fontFamily: "Inter, sans-serif", fontSize: "16px", lineHeight: "24px" }}
-                  >
-                    We&apos;ve sent a 6-digit code to
-                  </p>
+                    Click to resend
+                  </Button>
+                  .
+                </p>
+
+                <div className="flex shrink-0 items-center gap-2 whitespace-nowrap text-sm font-medium text-[#535862]">
+                  <img alt="" src={CLOCK_ICON} className="size-3" />
+                  <span>Expires in {minutes}:{seconds}</span>
                 </div>
               </div>
             </div>
-
-            <div
-              className="inline-flex items-center justify-center rounded-[999px] border border-[rgba(0,0,0,0.06)] bg-[#efefef] px-3 py-1.5"
-              style={{
-                fontFamily: "Inter, sans-serif",
-                fontSize: "14px",
-                lineHeight: "20px",
-                fontWeight: 500,
-                color: "#232323",
-              }}
-            >
-              {email}
-            </div>
-          </div>
-
-          {/* OTP slots + resend/timer in gap-[6px] wrapper (matches Figma) */}
-          <div className="flex w-[460px] flex-col items-start gap-[6px]">
-            <div className="w-full" onClick={focusHiddenInput}>
-              <OtpSlots code={otp} onClick={focusHiddenInput} />
-            </div>
-
-            <div className="flex w-full items-center justify-between">
-              <p
-                className="font-normal text-[#535862]"
-                style={{ fontFamily: "Inter, sans-serif", fontSize: "14px", lineHeight: "20px" }}
-              >
-                Didn&apos;t get a code?{" "}
-                <button
-                  type="button"
-                  onClick={handleResend}
-                  className="underline decoration-solid underline-offset-1"
-                >
-                  Click to resend
-                </button>
-                .
-              </p>
-
-              <div
-                className="flex shrink-0 items-center gap-2 whitespace-nowrap text-[#535862]"
-                style={{ fontFamily: "Inter, sans-serif", fontSize: "14px", lineHeight: "20px", fontWeight: 500 }}
-              >
-                <img alt="" src={CLOCK_ICON} className="size-3" />
-                <span>
-                  Expires in {minutes}:{seconds}
-                </span>
-              </div>
-            </div>
-          </div>
           </div>
         </div>
       </div>

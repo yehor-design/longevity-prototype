@@ -4,6 +4,8 @@ import { useMockDelay } from "@/hooks/useMockDelay";
 import { ROUTES } from "@/lib/constants";
 import { AuthBottomBadges } from "@/features/auth/components/AuthBottomBadges";
 import { AuthHeroPanel } from "@/features/auth/components/AuthHeroPanel";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 const GOOGLE_ICON_ASSETS = {
   blue: "https://www.figma.com/api/mcp/asset/d8e111e4-16b8-49c0-ac3e-d09c324b3064",
@@ -57,265 +59,101 @@ export function WelcomePage() {
     });
   };
 
+  const formContent = (
+    <div className="flex w-full flex-col gap-6">
+      <form onSubmit={handleGetStarted} className="flex w-full flex-col gap-4">
+        <Input
+          type="email"
+          placeholder="Enter your email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className="h-11 border-[#d5d7da] bg-white px-4 text-base shadow-[0px_1px_2px_0px_rgba(10,13,18,0.05)] placeholder:text-[#717680]"
+        />
+        <Button
+          type="submit"
+          disabled={emailLoading}
+          className="h-11 w-full rounded-lg text-base font-semibold"
+        >
+          {emailLoading ? "Loading..." : "Get started"}
+        </Button>
+      </form>
+
+      <div className="flex w-full items-center gap-2">
+        <div className="h-px flex-1 bg-[#e9eaeb]" />
+        <span className="shrink-0 text-sm font-medium text-[#535862]">OR</span>
+        <div className="h-px flex-1 bg-[#e9eaeb]" />
+      </div>
+
+      <Button
+        type="button"
+        variant="outline"
+        onClick={handleGoogleSignIn}
+        disabled={googleLoading}
+        className="h-11 w-full rounded-lg border-[#d5d7da] bg-white text-base font-semibold text-[#414651] shadow-[0px_1px_2px_0px_rgba(10,13,18,0.05)] hover:bg-gray-50"
+      >
+        <GoogleIcon />
+        {googleLoading ? "Connecting..." : "Sign up with Google"}
+      </Button>
+    </div>
+  );
+
   return (
     <div className="relative h-[100dvh] max-h-[100dvh] w-full overflow-hidden bg-[#f7f7f8]">
       <AuthHeroPanel />
       <AuthBottomBadges />
 
+      {/* Desktop */}
       <div className="relative z-10 hidden h-full lg:flex">
         <div className="flex h-full w-[calc(50vw-16px)] items-center justify-center px-6">
-          <div className="flex w-full max-w-[360px] flex-col items-center" style={{ gap: "32px" }}>
-            <div className="flex w-full flex-col items-center" style={{ gap: "12px" }}>
-              <p
-                className="w-full text-center font-semibold text-[#181d27]"
-                style={{ fontFamily: "Inter, sans-serif", fontSize: "30px", lineHeight: "38px" }}
-              >
+          <div className="flex w-full max-w-[360px] flex-col items-center gap-8">
+            <div className="flex w-full flex-col items-center gap-3">
+              <p className="w-full text-center text-[30px] font-semibold leading-[38px] text-[#181d27]">
                 Create an account
               </p>
-              <p
-                className="w-full text-center font-normal text-[#535862]"
-                style={{ fontFamily: "Inter, sans-serif", fontSize: "16px", lineHeight: "24px" }}
-              >
+              <p className="w-full text-center text-base font-normal leading-6 text-[#535862]">
                 Start your 30-day free trial.
               </p>
             </div>
 
-            <div className="flex w-full flex-col items-center" style={{ gap: "24px" }}>
-              <form onSubmit={handleGetStarted} className="flex w-full flex-col" style={{ gap: "16px" }}>
-                <div
-                  className="flex w-full items-center border border-[#d5d7da] bg-white"
-                  style={{
-                    borderRadius: "8px",
-                    padding: "10px 14px",
-                    gap: "8px",
-                    boxShadow: "0px 1px 2px 0px rgba(10,13,18,0.05)",
-                  }}
-                >
-                  <input
-                    type="email"
-                    placeholder="Enter your email"
-                    value={email}
-                    onChange={(event) => setEmail(event.target.value)}
-                    className="w-full flex-1 bg-transparent font-normal text-[#717680] outline-none"
-                    style={{ fontFamily: "Inter, sans-serif", fontSize: "16px", lineHeight: "24px" }}
-                  />
-                </div>
-
-                <button
-                  type="submit"
-                  disabled={emailLoading}
-                  className="relative flex w-full items-center justify-center overflow-hidden"
-                  style={{
-                    borderRadius: "8px",
-                    padding: "10px 16px",
-                    border: "2px solid rgba(255,255,255,0.12)",
-                    boxShadow: "0px 1px 2px 0px rgba(10,13,18,0.05)",
-                  }}
-                >
-                  <span className="absolute inset-0 bg-[#047857]" style={{ borderRadius: "8px" }} />
-                  <span
-                    className="pointer-events-none absolute inset-0"
-                    style={{
-                      borderRadius: "inherit",
-                      boxShadow:
-                        "inset 0px 0px 0px 1px rgba(10,13,18,0.18), inset 0px -2px 0px 0px rgba(10,13,18,0.05)",
-                    }}
-                  />
-                  <span
-                    className="relative whitespace-nowrap font-semibold text-white"
-                    style={{ fontFamily: "Inter, sans-serif", fontSize: "16px", lineHeight: "24px" }}
-                  >
-                    {emailLoading ? "Loading..." : "Get started"}
-                  </span>
-                </button>
-              </form>
-
-              <div className="flex w-full items-center" style={{ gap: "8px" }}>
-                <div className="h-px flex-1 bg-[#e9eaeb]" />
-                <span
-                  className="shrink-0 text-center font-medium text-[#535862]"
-                  style={{ fontFamily: "Inter, sans-serif", fontSize: "14px", lineHeight: "20px" }}
-                >
-                  OR
-                </span>
-                <div className="h-px flex-1 bg-[#e9eaeb]" />
-              </div>
-
-              <button
-                type="button"
-                onClick={handleGoogleSignIn}
-                disabled={googleLoading}
-                className="relative flex w-full items-center justify-center gap-3 overflow-hidden border border-[#d5d7da]"
-                style={{
-                  borderRadius: "8px",
-                  padding: "10px 16px",
-                  boxShadow: "0px 1px 2px 0px rgba(10,13,18,0.05)",
-                }}
-              >
-                <span className="absolute inset-0 bg-white" style={{ borderRadius: "8px" }} />
-                <span
-                  className="pointer-events-none absolute inset-0"
-                  style={{
-                    borderRadius: "inherit",
-                    boxShadow:
-                      "inset 0px 0px 0px 1px rgba(10,13,18,0.18), inset 0px -2px 0px 0px rgba(10,13,18,0.05)",
-                  }}
-                />
-                <div className="relative flex items-center justify-center gap-3">
-                  <GoogleIcon />
-                  <span
-                    className="whitespace-nowrap font-semibold text-[#414651]"
-                    style={{ fontFamily: "Inter, sans-serif", fontSize: "16px", lineHeight: "24px" }}
-                  >
-                    {googleLoading ? "Connecting..." : "Sign up with Google"}
-                  </span>
-                </div>
-              </button>
-            </div>
+            {formContent}
 
             <div className="flex w-full items-center justify-center gap-1">
-              <span
-                className="font-normal text-[#535862]"
-                style={{ fontFamily: "Inter, sans-serif", fontSize: "14px", lineHeight: "20px" }}
-              >
-                Already have an account?
-              </span>
-              <button
-                type="button"
+              <span className="text-sm font-normal text-[#535862]">Already have an account?</span>
+              <Button
+                variant="link"
+                className="h-auto p-0 text-sm font-semibold text-primary"
                 onClick={() => navigate(ROUTES.LOGIN_EMAIL)}
-                className="font-semibold text-[#047857]"
-                style={{ fontFamily: "Inter, sans-serif", fontSize: "14px", lineHeight: "20px" }}
               >
                 Log in
-              </button>
+              </Button>
             </div>
           </div>
         </div>
       </div>
 
+      {/* Mobile */}
       <div className="relative z-10 flex h-full items-center justify-center px-5 pb-24 pt-16 lg:hidden">
         <div className="w-full max-w-[360px]">
-          <div className="flex w-full flex-col items-center text-center" style={{ gap: "12px" }}>
-            <p
-              className="w-full font-semibold text-[#181d27]"
-              style={{ fontFamily: "Inter, sans-serif", fontSize: "30px", lineHeight: "38px" }}
-            >
+          <div className="flex w-full flex-col items-center gap-3 text-center">
+            <p className="w-full text-[30px] font-semibold leading-[38px] text-[#181d27]">
               Create an account
             </p>
-            <p
-              className="w-full font-normal text-[#535862]"
-              style={{ fontFamily: "Inter, sans-serif", fontSize: "16px", lineHeight: "24px" }}
-            >
+            <p className="w-full text-base font-normal leading-6 text-[#535862]">
               Start your 30-day free trial.
             </p>
           </div>
 
-          <form onSubmit={handleGetStarted} className="mt-8 flex w-full flex-col" style={{ gap: "16px" }}>
-            <div
-              className="flex w-full items-center border border-[#d5d7da] bg-white"
-              style={{
-                borderRadius: "8px",
-                padding: "10px 14px",
-                gap: "8px",
-                boxShadow: "0px 1px 2px 0px rgba(10,13,18,0.05)",
-              }}
-            >
-              <input
-                type="email"
-                placeholder="Enter your email"
-                value={email}
-                onChange={(event) => setEmail(event.target.value)}
-                className="w-full flex-1 bg-transparent font-normal text-[#717680] outline-none"
-                style={{ fontFamily: "Inter, sans-serif", fontSize: "16px", lineHeight: "24px" }}
-              />
-            </div>
-
-            <button
-              type="submit"
-              disabled={emailLoading}
-              className="relative flex w-full items-center justify-center overflow-hidden"
-              style={{
-                borderRadius: "8px",
-                padding: "10px 16px",
-                border: "2px solid rgba(255,255,255,0.12)",
-                boxShadow: "0px 1px 2px 0px rgba(10,13,18,0.05)",
-              }}
-            >
-              <span className="absolute inset-0 bg-[#047857]" style={{ borderRadius: "8px" }} />
-              <span
-                className="pointer-events-none absolute inset-0"
-                style={{
-                  borderRadius: "inherit",
-                  boxShadow:
-                    "inset 0px 0px 0px 1px rgba(10,13,18,0.18), inset 0px -2px 0px 0px rgba(10,13,18,0.05)",
-                }}
-              />
-              <span
-                className="relative whitespace-nowrap font-semibold text-white"
-                style={{ fontFamily: "Inter, sans-serif", fontSize: "16px", lineHeight: "24px" }}
-              >
-                {emailLoading ? "Loading..." : "Get started"}
-              </span>
-            </button>
-
-            <div className="flex w-full items-center" style={{ gap: "8px" }}>
-              <div className="h-px flex-1 bg-[#e9eaeb]" />
-              <span
-                className="shrink-0 text-center font-medium text-[#535862]"
-                style={{ fontFamily: "Inter, sans-serif", fontSize: "14px", lineHeight: "20px" }}
-              >
-                OR
-              </span>
-              <div className="h-px flex-1 bg-[#e9eaeb]" />
-            </div>
-
-            <button
-              type="button"
-              onClick={handleGoogleSignIn}
-              disabled={googleLoading}
-              className="relative flex w-full items-center justify-center gap-3 overflow-hidden border border-[#d5d7da]"
-              style={{
-                borderRadius: "8px",
-                padding: "10px 16px",
-                boxShadow: "0px 1px 2px 0px rgba(10,13,18,0.05)",
-              }}
-            >
-              <span className="absolute inset-0 bg-white" style={{ borderRadius: "8px" }} />
-              <span
-                className="pointer-events-none absolute inset-0"
-                style={{
-                  borderRadius: "inherit",
-                  boxShadow:
-                    "inset 0px 0px 0px 1px rgba(10,13,18,0.18), inset 0px -2px 0px 0px rgba(10,13,18,0.05)",
-                }}
-              />
-              <div className="relative flex items-center justify-center gap-3">
-                <GoogleIcon />
-                <span
-                  className="whitespace-nowrap font-semibold text-[#414651]"
-                  style={{ fontFamily: "Inter, sans-serif", fontSize: "16px", lineHeight: "24px" }}
-                >
-                  {googleLoading ? "Connecting..." : "Sign up with Google"}
-                </span>
-              </div>
-            </button>
-          </form>
+          <div className="mt-8">{formContent}</div>
 
           <div className="mt-6 flex w-full items-center justify-center gap-1">
-            <span
-              className="font-normal text-[#535862]"
-              style={{ fontFamily: "Inter, sans-serif", fontSize: "14px", lineHeight: "20px" }}
-            >
-              Already have an account?
-            </span>
-            <button
-              type="button"
+            <span className="text-sm font-normal text-[#535862]">Already have an account?</span>
+            <Button
+              variant="link"
+              className="h-auto p-0 text-sm font-semibold text-primary"
               onClick={() => navigate(ROUTES.LOGIN_EMAIL)}
-              className="font-semibold text-[#047857]"
-              style={{ fontFamily: "Inter, sans-serif", fontSize: "14px", lineHeight: "20px" }}
             >
               Log in
-            </button>
+            </Button>
           </div>
         </div>
       </div>

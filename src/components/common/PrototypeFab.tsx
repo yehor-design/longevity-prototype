@@ -153,7 +153,7 @@ export function PrototypeFab() {
 
       <button
         onClick={() => setOpen((o) => !o)}
-        className="flex items-center justify-center w-10 h-10 bg-amber-500/90 hover:bg-amber-500 text-white text-lg rounded-full shadow-lg transition-all backdrop-blur-sm select-none"
+        className="flex items-center justify-center w-10 h-10 text-lg transition-all select-none opacity-40 hover:opacity-100"
         aria-label="Prototype settings"
       >
         ⚙️

@@ -2,6 +2,8 @@ import { useState } from "react";
 import caretLeftSvg from "@/assets/auth/caret-left.svg";
 import { AuthHeroPanel } from "./AuthHeroPanel";
 import { AuthBottomBadges } from "./AuthBottomBadges";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const ASSETS = {
   fileText: "https://www.figma.com/api/mcp/asset/877f5d24-bfac-4ea1-a7d5-9cdddd2ac520",
@@ -47,50 +49,6 @@ const CONSENT_ITEMS: ConsentItemDef[] = [
   },
 ];
 
-// ── Checkbox visual ──────────────────────────────────────────────────────────
-
-interface CheckboxIconProps {
-  checked: boolean;
-  indeterminate?: boolean;
-}
-
-function CheckboxIcon({ checked, indeterminate }: CheckboxIconProps) {
-  const active = checked || indeterminate;
-  return (
-    <div className="relative flex shrink-0 items-center justify-center" style={{ width: 20, height: 20 }}>
-      <div
-        className="flex items-center justify-center"
-        style={{
-          width: 14,
-          height: 14,
-          borderRadius: 3,
-          backgroundColor: active ? "#047857" : "#fafafa",
-          boxShadow: active
-            ? "0px 1px 2px 0px rgba(4,120,87,0.3), 0px 0px 0px 1px #065f46"
-            : "0px 1px 2px 0px rgba(0,0,0,0.12), 0px 0px 0px 1px rgba(0,0,0,0.08)",
-        }}
-      >
-        {checked && !indeterminate && (
-          <svg width="9" height="7" viewBox="0 0 9 7" fill="none" aria-hidden="true">
-            <path
-              d="M1 3.5L3.2 5.5L8 1"
-              stroke="white"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        )}
-        {indeterminate && (
-          <svg width="7" height="2" viewBox="0 0 7 2" fill="none" aria-hidden="true">
-            <path d="M0.5 1H6.5" stroke="white" strokeWidth="1.5" strokeLinecap="round" />
-          </svg>
-        )}
-      </div>
-    </div>
-  );
-}
-
 // ── Consent card ─────────────────────────────────────────────────────────────
 
 interface ConsentCardProps {
@@ -112,92 +70,44 @@ function ConsentCard({ item, checked, onToggle }: ConsentCardProps) {
           onToggle();
         }
       }}
-      className="flex w-full cursor-pointer gap-[8px] items-start overflow-hidden rounded-[8px] bg-white p-[8px] text-left transition-shadow duration-150"
+      className="flex w-full cursor-pointer gap-2 items-start overflow-hidden rounded-lg bg-white p-2 text-left transition-shadow duration-150"
       style={{
         boxShadow: checked
-          ? "0px 1px 2px 0px rgba(4,120,87,0.12), 0px 0px 0px 1.5px #047857"
+          ? "0px 1px 2px 0px rgba(4,120,87,0.12), 0px 0px 0px 1.5px var(--primary)"
           : "0px 1px 2px 0px rgba(0,0,0,0.12), 0px 0px 0px 1px rgba(0,0,0,0.08)",
       }}
     >
-      <CheckboxIcon checked={checked} />
+      <Checkbox
+        checked={checked}
+        tabIndex={-1}
+        className="pointer-events-none mt-0.5 shrink-0"
+      />
 
       <div className="min-w-0 flex-1">
         {/* Label row */}
-        <div className="flex flex-wrap items-center gap-[6px]">
-          <span
-            style={{
-              fontFamily: "Inter, sans-serif",
-              fontWeight: 500,
-              fontSize: "13px",
-              lineHeight: "20px",
-              color: "#18181b",
-              whiteSpace: "nowrap",
-            }}
-          >
+        <div className="flex flex-wrap items-center gap-1.5">
+          <span className="whitespace-nowrap text-[13px] font-medium leading-5 text-[#18181b]">
             {item.title}
           </span>
 
           {item.required ? (
-            <span
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                justifyContent: "center",
-                height: 20,
-                padding: "1px 5px",
-                borderRadius: 6,
-                fontFamily: "Inter, sans-serif",
-                fontWeight: 500,
-                fontSize: "12px",
-                lineHeight: "20px",
-                color: "#065f46",
-                backgroundColor: "#d1fae5",
-                border: "1px solid #a7f3d0",
-                whiteSpace: "nowrap",
-              }}
-            >
+            <span className="inline-flex h-5 items-center justify-center whitespace-nowrap rounded-md border border-[#a7f3d0] bg-[#d1fae5] px-1.5 text-xs font-medium leading-5 text-[#065f46]">
               Required
             </span>
           ) : (
-            <span
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                justifyContent: "center",
-                height: 20,
-                padding: "1px 5px",
-                borderRadius: 6,
-                fontFamily: "Inter, sans-serif",
-                fontWeight: 500,
-                fontSize: "12px",
-                lineHeight: "20px",
-                color: "#52525b",
-                backgroundColor: "#f4f4f5",
-                border: "1px solid #e4e4e7",
-                whiteSpace: "nowrap",
-              }}
-            >
+            <span className="inline-flex h-5 items-center justify-center whitespace-nowrap rounded-md border border-[#e4e4e7] bg-[#f4f4f5] px-1.5 text-xs font-medium leading-5 text-[#52525b]">
               Optional
             </span>
           )}
         </div>
 
         {/* Description */}
-        <p
-          style={{
-            fontFamily: "Inter, sans-serif",
-            fontWeight: 400,
-            fontSize: "13px",
-            lineHeight: "1.6",
-            color: "#52525b",
-            margin: 0,
-          }}
-        >
+        <p className="text-[13px] font-normal leading-relaxed text-[#52525b]">
           {item.descriptionPre}
           {item.link && (
             <a
               href={item.link.href}
-              style={{ fontWeight: 500, color: "#047857" }}
+              className="font-medium text-primary"
               onClick={(e) => e.stopPropagation()}
             >
               {item.link.text}
@@ -220,7 +130,6 @@ export function PrivacyConsentScreen({ onBack, onAccept }: PrivacyConsentScreenP
   const [checked, setChecked] = useState<Set<string>>(new Set());
 
   const allChecked = checked.size === CONSENT_ITEMS.length;
-  const someChecked = checked.size > 0 && !allChecked;
   const requiredAllChecked = CONSENT_ITEMS.filter((i) => i.required).every((i) =>
     checked.has(i.id),
   );
@@ -248,44 +157,36 @@ export function PrivacyConsentScreen({ onBack, onAccept }: PrivacyConsentScreenP
       <AuthBottomBadges />
 
       {/* Back button */}
-      <button
+      <Button
         type="button"
+        variant="ghost"
         onClick={onBack}
-        className="absolute left-4 top-4 z-30 inline-flex items-center justify-center gap-[6px] rounded-[6px] px-[10px] py-[6px] text-[#18181b] transition-opacity hover:opacity-80"
-        style={{
-          fontFamily: "Inter, sans-serif",
-          fontSize: "13px",
-          lineHeight: "20px",
-          fontWeight: 500,
-        }}
+        className="absolute left-4 top-4 z-30 h-8 gap-1.5 rounded-md px-3 text-[13px] font-medium text-[#18181b]"
       >
         <img alt="" src={caretLeftSvg} aria-hidden="true" className="size-[15px]" />
-        <span>Back</span>
-      </button>
+        Back
+      </Button>
 
       {/* Left content panel */}
       <div className="relative z-10 flex h-full items-center justify-center lg:w-[calc(50vw-16px)]">
-        <div className="flex w-full max-w-[420px] flex-col items-center gap-[24px] px-4">
+        <div className="flex w-full max-w-[420px] flex-col items-center gap-6 px-4">
 
           {/* Header block */}
-          <div className="flex w-full max-w-[350px] flex-col items-center gap-[24px]">
+          <div className="flex w-full max-w-[350px] flex-col items-center gap-6">
             {/* File-text icon */}
             <div
-              className="flex shrink-0 items-start rounded-[16px] p-[16px]"
-              style={{ width: 64, height: 64, backgroundColor: "rgba(234,170,8,0.12)" }}
+              className="flex size-16 shrink-0 items-start rounded-2xl p-4"
+              style={{ backgroundColor: "rgba(234,170,8,0.12)" }}
             >
-              <img alt="" src={ASSETS.fileText} aria-hidden="true" className="size-[32px]" />
+              <img alt="" src={ASSETS.fileText} aria-hidden="true" className="size-8" />
             </div>
 
             {/* Title + subtitle */}
-            <div
-              className="flex w-full flex-col items-center gap-[8px] text-center"
-              style={{ fontFamily: "Inter, sans-serif", fontWeight: 500 }}
-            >
-              <p style={{ fontSize: "18px", lineHeight: "26px", color: "#0a0a0a" }}>
+            <div className="flex w-full flex-col items-center gap-2 text-center">
+              <p className="text-[18px] font-medium leading-[26px] text-[#0a0a0a]">
                 Privacy &amp; Consent
               </p>
-              <p style={{ fontSize: "14px", lineHeight: "20px", color: "#6f6f77" }}>
+              <p className="text-sm leading-5 text-[#6f6f77]">
                 Review and accept our data policies to continue.
               </p>
             </div>
@@ -294,27 +195,31 @@ export function PrivacyConsentScreen({ onBack, onAccept }: PrivacyConsentScreenP
           {/* Checkbox list */}
           <div className="flex w-full flex-col items-start">
             {/* Select All row */}
-            <button
-              type="button"
+            <div
+              role="checkbox"
+              aria-checked={allChecked}
+              tabIndex={0}
               onClick={toggleAll}
-              className="flex w-full items-center gap-[8px] px-[8px] py-[16px]"
+              onKeyDown={(e) => {
+                if (e.key === " " || e.key === "Enter") {
+                  e.preventDefault();
+                  toggleAll();
+                }
+              }}
+              className="inline-flex cursor-pointer items-center gap-2 px-2 py-4"
             >
-              <CheckboxIcon checked={allChecked} indeterminate={someChecked} />
-              <span
-                style={{
-                  fontFamily: "Inter, sans-serif",
-                  fontWeight: 500,
-                  fontSize: "13px",
-                  lineHeight: "20px",
-                  color: "#18181b",
-                }}
-              >
+              <Checkbox
+                checked={allChecked}
+                tabIndex={-1}
+                className="pointer-events-none shrink-0"
+              />
+              <span className="text-[13px] font-medium leading-5 text-[#18181b]">
                 Select All
               </span>
-            </button>
+            </div>
 
             {/* Cards */}
-            <div className="flex w-full flex-col gap-[8px]">
+            <div className="flex w-full flex-col gap-2">
               {CONSENT_ITEMS.map((item) => (
                 <ConsentCard
                   key={item.id}
@@ -327,79 +232,31 @@ export function PrivacyConsentScreen({ onBack, onAccept }: PrivacyConsentScreenP
           </div>
 
           {/* Accept and Continue button */}
-          <button
+          <Button
             type="button"
             onClick={requiredAllChecked ? onAccept : undefined}
             disabled={!requiredAllChecked}
-            className="relative flex h-[40px] w-full items-center justify-center overflow-hidden rounded-[6px] px-[16px] py-[10px] transition-opacity"
-            style={{
-              backgroundColor: "#047857",
-              boxShadow: "0px 1px 2px 0px rgba(4,120,87,0.4), 0px 0px 0px 1px #065f46",
-              opacity: requiredAllChecked ? 1 : 0.5,
-              cursor: requiredAllChecked ? "pointer" : "not-allowed",
-            }}
+            className="h-10 w-full rounded-lg text-sm font-medium"
           >
-            <span
-              className="relative whitespace-nowrap"
-              style={{
-                fontFamily: "Inter, sans-serif",
-                fontWeight: 500,
-                fontSize: "14px",
-                lineHeight: "20px",
-                color: "rgba(255,255,255,0.88)",
-              }}
-            >
-              Accept and Continue
-            </span>
-            <div className="pointer-events-none absolute inset-0 rounded-[inherit] shadow-[inset_0px_0.75px_0px_0px_rgba(255,255,255,0.2)]" />
-          </button>
+            Accept and Continue
+          </Button>
 
           {/* Footer links */}
-          <div className="flex items-center gap-[24px]">
+          <div className="flex items-center gap-6">
             <a
               href="/privacy"
-              className="flex items-center gap-[6px] transition-opacity hover:opacity-80"
+              className="flex items-center gap-1.5 transition-opacity hover:opacity-80"
             >
-              <span
-                style={{
-                  fontFamily: "Inter, sans-serif",
-                  fontWeight: 500,
-                  fontSize: "14px",
-                  lineHeight: "20px",
-                  color: "#047857",
-                }}
-              >
-                Privacy Policy
-              </span>
-              <img
-                alt=""
-                src={ASSETS.arrowSquareOut}
-                aria-hidden="true"
-                className="size-[18px]"
-              />
+              <span className="text-sm font-medium text-primary">Privacy Policy</span>
+              <img alt="" src={ASSETS.arrowSquareOut} aria-hidden="true" className="size-[18px]" />
             </a>
 
             <a
               href="/terms"
-              className="flex items-center gap-[6px] transition-opacity hover:opacity-80"
+              className="flex items-center gap-1.5 transition-opacity hover:opacity-80"
             >
-              <span
-                style={{
-                  fontFamily: "Inter, sans-serif",
-                  fontWeight: 500,
-                  fontSize: "14px",
-                  lineHeight: "20px",
-                  color: "#047857",
-                }}
-              >
-                Terms of Service
-              </span>
-              <img
-                alt=""
-                src={ASSETS.arrowSquareOut}
-                aria-hidden="true"
-                className="size-[18px]"
-              />
+              <span className="text-sm font-medium text-primary">Terms of Service</span>
+              <img alt="" src={ASSETS.arrowSquareOut} aria-hidden="true" className="size-[18px]" />
             </a>
           </div>
         </div>

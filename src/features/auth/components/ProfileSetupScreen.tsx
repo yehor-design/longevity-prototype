@@ -5,6 +5,9 @@ import userIconSvg from "@/assets/auth/user-icon.svg";
 import calendarIconSvg from "@/assets/auth/calendar-icon.svg";
 import { AuthHeroPanel } from "./AuthHeroPanel";
 import { AuthBottomBadges } from "./AuthBottomBadges";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 const MONTHS = [
   "January", "February", "March", "April", "May", "June",
@@ -58,14 +61,12 @@ function DatePicker({ value, onChange, onClose, anchorRef }: DatePickerProps) {
     }
   };
 
-  // Build calendar grid
   const firstDay = new Date(viewYear, viewMonth, 1).getDay();
   const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
   const cells: (number | null)[] = [
     ...Array.from({ length: firstDay }, () => null),
     ...Array.from({ length: daysInMonth }, (_, i) => i + 1),
   ];
-  // Pad to full rows
   while (cells.length % 7 !== 0) cells.push(null);
 
   const isSelected = (day: number) =>
@@ -82,47 +83,37 @@ function DatePicker({ value, onChange, onClose, anchorRef }: DatePickerProps) {
   return (
     <div
       ref={pickerRef}
-      className="absolute left-0 top-[calc(100%+6px)] z-50 w-full min-w-[280px] rounded-[12px] bg-white p-4"
-      style={{
-        border: "1px solid #e4e4e7",
-        boxShadow: "0px 8px 24px 0px rgba(10,13,18,0.12), 0px 1px 3px 0px rgba(10,13,18,0.08)",
-      }}
+      className="absolute left-0 top-[calc(100%+6px)] z-50 w-full min-w-[280px] rounded-xl border border-border bg-white p-4 shadow-[0px_8px_24px_0px_rgba(10,13,18,0.12),0px_1px_3px_0px_rgba(10,13,18,0.08)]"
     >
       {/* Header */}
       <div className="mb-3 flex items-center justify-between">
-        <button
+        <Button
           type="button"
+          variant="ghost"
+          size="icon-sm"
           onClick={prevMonth}
-          className="flex size-7 items-center justify-center rounded-[6px] text-[#414651] hover:bg-[#f4f4f5] transition-colors"
           aria-label="Previous month"
         >
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
             <path d="M8.75 2.5L4.75 7L8.75 11.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
-        </button>
+        </Button>
 
-        <span
-          style={{
-            fontFamily: "Inter, sans-serif",
-            fontWeight: 600,
-            fontSize: "14px",
-            lineHeight: "20px",
-            color: "#0a0a0a",
-          }}
-        >
+        <span className="text-sm font-semibold text-[#0a0a0a]">
           {MONTHS[viewMonth]} {viewYear}
         </span>
 
-        <button
+        <Button
           type="button"
+          variant="ghost"
+          size="icon-sm"
           onClick={nextMonth}
-          className="flex size-7 items-center justify-center rounded-[6px] text-[#414651] hover:bg-[#f4f4f5] transition-colors"
           aria-label="Next month"
         >
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
             <path d="M5.25 2.5L9.25 7L5.25 11.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
-        </button>
+        </Button>
       </div>
 
       {/* Weekday labels */}
@@ -130,14 +121,7 @@ function DatePicker({ value, onChange, onClose, anchorRef }: DatePickerProps) {
         {WEEKDAYS.map((day) => (
           <div
             key={day}
-            className="flex h-8 items-center justify-center"
-            style={{
-              fontFamily: "Inter, sans-serif",
-              fontWeight: 500,
-              fontSize: "12px",
-              lineHeight: "16px",
-              color: "#717680",
-            }}
+            className="flex h-8 items-center justify-center text-xs font-medium text-[#717680]"
           >
             {day}
           </div>
@@ -158,14 +142,11 @@ function DatePicker({ value, onChange, onClose, anchorRef }: DatePickerProps) {
                 onChange(new Date(viewYear, viewMonth, day));
                 onClose();
               }}
-              className="flex h-8 w-full items-center justify-center rounded-[6px] transition-colors"
+              className="flex h-8 w-full items-center justify-center rounded-md text-[13px] transition-colors"
               style={{
-                fontFamily: "Inter, sans-serif",
                 fontWeight: selected ? 600 : 400,
-                fontSize: "13px",
-                lineHeight: "20px",
-                backgroundColor: selected ? "#047857" : "transparent",
-                color: selected ? "rgba(255,255,255,0.88)" : todayCell ? "#047857" : "#0a0a0a",
+                backgroundColor: selected ? "var(--primary)" : "transparent",
+                color: selected ? "rgba(255,255,255,0.88)" : todayCell ? "var(--primary)" : "#0a0a0a",
               }}
               onMouseEnter={(e) => {
                 if (!selected) (e.currentTarget as HTMLButtonElement).style.backgroundColor = "#f4f4f5";
@@ -209,43 +190,36 @@ export function ProfileSetupScreen({ onBack, onContinue, onSkip }: ProfileSetupS
       <AuthBottomBadges />
 
       {/* Back button */}
-      <button
+      <Button
         type="button"
+        variant="ghost"
         onClick={onBack}
-        className="absolute left-4 top-4 z-30 inline-flex items-center justify-center gap-[6px] rounded-[6px] px-[10px] py-[6px] text-[#18181b] hover:opacity-80 transition-opacity"
-        style={{ fontFamily: "Inter, sans-serif", fontSize: "13px", lineHeight: "20px", fontWeight: 500 }}
+        className="absolute left-4 top-4 z-30 h-8 gap-1.5 rounded-md px-3 text-[13px] font-medium text-[#18181b]"
       >
         <img alt="" src={caretLeftSvg} aria-hidden="true" className="size-[15px]" />
-        <span>Back</span>
-      </button>
+        Back
+      </Button>
 
       {/* Left content panel */}
       <div className="relative z-10 flex h-full items-center justify-center lg:w-[calc(50vw-16px)]">
-        <div className="flex w-full max-w-[420px] flex-col items-center gap-[40px] px-4">
+        <div className="flex w-full max-w-[420px] flex-col items-center gap-10 px-4">
 
           {/* Header block */}
-          <div className="flex w-full max-w-[350px] flex-col items-center gap-[24px]">
+          <div className="flex w-full max-w-[350px] flex-col items-center gap-6">
             {/* User Focus icon */}
             <div
-              className="flex shrink-0 items-start rounded-[16px] p-[16px]"
-              style={{
-                width: 64,
-                height: 64,
-                backgroundColor: "rgba(158,119,237,0.12)",
-              }}
+              className="flex size-16 shrink-0 items-start rounded-2xl p-4"
+              style={{ backgroundColor: "rgba(158,119,237,0.12)" }}
             >
-              <img alt="" src={userFocusSvg} aria-hidden="true" className="size-[32px]" />
+              <img alt="" src={userFocusSvg} aria-hidden="true" className="size-8" />
             </div>
 
             {/* Title + subtitle */}
-            <div
-              className="flex w-full flex-col items-center gap-[8px] text-center"
-              style={{ fontFamily: "Inter, sans-serif", fontWeight: 500, fontStyle: "normal" }}
-            >
-              <p style={{ fontSize: "18px", lineHeight: "26px", color: "#0a0a0a" }}>
+            <div className="flex w-full flex-col items-center gap-2 text-center">
+              <p className="text-[18px] font-medium leading-[26px] text-[#0a0a0a]">
                 Complete your profile
               </p>
-              <div style={{ fontSize: "14px", lineHeight: "20px", color: "#6f6f77" }}>
+              <div className="text-sm leading-5 text-[#6f6f77]">
                 <p>Tell us a bit about yourself.</p>
                 <p>You can always update this later.</p>
               </div>
@@ -253,143 +227,64 @@ export function ProfileSetupScreen({ onBack, onContinue, onSkip }: ProfileSetupS
           </div>
 
           {/* Form */}
-          <div className="flex w-full flex-col items-center gap-[16px]">
+          <div className="flex w-full flex-col gap-4">
 
             {/* First name */}
-            <div className="flex w-full flex-col gap-[6px]">
-              <label
-                htmlFor="first-name"
-                style={{
-                  fontFamily: "Inter, sans-serif",
-                  fontWeight: 500,
-                  fontSize: "14px",
-                  lineHeight: "20px",
-                  color: "#414651",
-                }}
-              >
+            <div className="flex w-full flex-col gap-1.5">
+              <Label htmlFor="first-name" className="text-sm font-medium text-[#414651]">
                 First name
-              </label>
-              <div
-                className="flex items-center gap-[8px] bg-white px-[14px] py-[10px] rounded-[8px]"
-                style={{
-                  border: "1px solid #d5d7da",
-                  boxShadow: "0px 1px 2px 0px rgba(10,13,18,0.05)",
-                }}
-              >
-                <img alt="" src={userIconSvg} aria-hidden="true" className="size-[20px] shrink-0" />
-                <input
+              </Label>
+              <div className="relative">
+                <img alt="" src={userIconSvg} aria-hidden="true" className="absolute left-3 top-1/2 size-5 -translate-y-1/2 shrink-0" />
+                <Input
                   id="first-name"
                   type="text"
                   autoComplete="given-name"
                   value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}
                   placeholder="John"
-                  className="flex-1 min-w-0 bg-transparent outline-none"
-                  style={{
-                    fontFamily: "Inter, sans-serif",
-                    fontWeight: 400,
-                    fontSize: "16px",
-                    lineHeight: "24px",
-                    color: "#0a0a0a",
-                  }}
+                  className="h-11 border-[#d5d7da] bg-white pl-10 text-base shadow-[0px_1px_2px_0px_rgba(10,13,18,0.05)] placeholder:text-[#717680]"
                 />
               </div>
             </div>
 
             {/* Last name */}
-            <div className="flex w-full flex-col gap-[6px]">
-              <label
-                htmlFor="last-name"
-                style={{
-                  fontFamily: "Inter, sans-serif",
-                  fontWeight: 500,
-                  fontSize: "14px",
-                  lineHeight: "20px",
-                  color: "#414651",
-                }}
-              >
+            <div className="flex w-full flex-col gap-1.5">
+              <Label htmlFor="last-name" className="text-sm font-medium text-[#414651]">
                 Last name
-              </label>
-              <div
-                className="flex items-center gap-[8px] bg-white px-[14px] py-[10px] rounded-[8px]"
-                style={{
-                  border: "1px solid #d5d7da",
-                  boxShadow: "0px 1px 2px 0px rgba(10,13,18,0.05)",
-                }}
-              >
-                <img alt="" src={userIconSvg} aria-hidden="true" className="size-[20px] shrink-0" />
-                <input
+              </Label>
+              <div className="relative">
+                <img alt="" src={userIconSvg} aria-hidden="true" className="absolute left-3 top-1/2 size-5 -translate-y-1/2 shrink-0" />
+                <Input
                   id="last-name"
                   type="text"
                   autoComplete="family-name"
                   value={lastName}
                   onChange={(e) => setLastName(e.target.value)}
                   placeholder="Doe"
-                  className="flex-1 min-w-0 bg-transparent outline-none"
-                  style={{
-                    fontFamily: "Inter, sans-serif",
-                    fontWeight: 400,
-                    fontSize: "16px",
-                    lineHeight: "24px",
-                    color: "#0a0a0a",
-                  }}
+                  className="h-11 border-[#d5d7da] bg-white pl-10 text-base shadow-[0px_1px_2px_0px_rgba(10,13,18,0.05)] placeholder:text-[#717680]"
                 />
               </div>
             </div>
 
             {/* Date of birth */}
-            <div className="relative flex w-full flex-col gap-[6px]">
-              <span
-                style={{
-                  fontFamily: "Inter, sans-serif",
-                  fontWeight: 500,
-                  fontSize: "14px",
-                  lineHeight: "20px",
-                  color: "#414651",
-                }}
-              >
+            <div className="relative flex w-full flex-col gap-1.5">
+              <Label className="text-sm font-medium text-[#414651]">
                 Date of birth
-              </span>
-
-              {/* Date picker trigger button */}
-              <button
+              </Label>
+              <Button
                 ref={dateButtonRef}
                 type="button"
+                variant="outline"
                 onClick={() => setDatePickerOpen((v) => !v)}
-                className="relative flex w-full items-center gap-[4px] overflow-hidden bg-white px-[14px] py-[10px] rounded-[8px] text-left"
-                style={{
-                  border: "1px solid #d5d7da",
-                  boxShadow: "0px 1px 2px 0px rgba(10,13,18,0.05)",
-                }}
+                className="h-11 w-full justify-start gap-2 border-[#d5d7da] bg-white px-3 text-base font-normal shadow-[0px_1px_2px_0px_rgba(10,13,18,0.05)]"
               >
-                {/* Inner inset ring overlay (matches Figma inner shadow) */}
-                <div className="pointer-events-none absolute inset-0 rounded-[inherit] shadow-[inset_0px_0px_0px_1px_rgba(10,13,18,0.18),inset_0px_-2px_0px_0px_rgba(10,13,18,0.05)]" />
+                <img alt="" src={calendarIconSvg} aria-hidden="true" className="size-5 shrink-0" />
+                <span className={birthDate ? "text-foreground" : "text-[#717680]"}>
+                  {birthDate ? formatDate(birthDate) : "Select date"}
+                </span>
+              </Button>
 
-                <div className="relative shrink-0 size-[20px] overflow-hidden">
-                  <div className="absolute inset-[8.33%_12.5%]">
-                    <div className="absolute inset-[-5%_-5.56%]">
-                      <img alt="" src={calendarIconSvg} className="block size-full" />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-center px-[2px]">
-                  <span
-                    style={{
-                      fontFamily: "Inter, sans-serif",
-                      fontWeight: 400,
-                      fontSize: "16px",
-                      lineHeight: "24px",
-                      color: birthDate ? "#0a0a0a" : "#717680",
-                      whiteSpace: "nowrap",
-                    }}
-                  >
-                    {birthDate ? formatDate(birthDate) : "Select date"}
-                  </span>
-                </div>
-              </button>
-
-              {/* Date picker popover */}
               {datePickerOpen && (
                 <DatePicker
                   value={birthDate}
@@ -401,52 +296,22 @@ export function ProfileSetupScreen({ onBack, onContinue, onSkip }: ProfileSetupS
             </div>
 
             {/* Buttons */}
-            <div className="flex w-full flex-col gap-[8px]">
-              {/* Continue */}
-              <button
+            <div className="flex w-full flex-col gap-2">
+              <Button
                 type="button"
                 onClick={onContinue}
-                className="relative flex w-full items-center justify-center overflow-hidden rounded-[6px] px-[16px] py-[10px] hover:opacity-90 transition-opacity"
-                style={{
-                  backgroundColor: "#047857",
-                  boxShadow: "0px 1px 2px 0px rgba(4,120,87,0.4), 0px 0px 0px 1px #065f46",
-                }}
+                className="h-10 w-full rounded-lg text-sm font-medium"
               >
-                <span
-                  className="relative whitespace-nowrap"
-                  style={{
-                    fontFamily: "Inter, sans-serif",
-                    fontWeight: 500,
-                    fontSize: "14px",
-                    lineHeight: "20px",
-                    color: "rgba(255,255,255,0.88)",
-                  }}
-                >
-                  Continue
-                </span>
-                {/* Inner top highlight */}
-                <div className="pointer-events-none absolute inset-0 rounded-[inherit] shadow-[inset_0px_0.75px_0px_0px_rgba(255,255,255,0.2)]" />
-              </button>
-
-              {/* Skip for now */}
-              <button
+                Continue
+              </Button>
+              <Button
                 type="button"
+                variant="ghost"
                 onClick={onSkip}
-                className="flex w-full items-center justify-center rounded-[6px] px-[16px] py-[10px] hover:opacity-70 transition-opacity"
+                className="h-10 w-full rounded-lg text-sm font-medium"
               >
-                <span
-                  className="whitespace-nowrap"
-                  style={{
-                    fontFamily: "Inter, sans-serif",
-                    fontWeight: 500,
-                    fontSize: "14px",
-                    lineHeight: "20px",
-                    color: "#18181b",
-                  }}
-                >
-                  Skip for now
-                </span>
-              </button>
+                Skip for now
+              </Button>
             </div>
           </div>
         </div>
