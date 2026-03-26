@@ -1,1 +1,1 @@
-// dashboard/pages placeholder
+export { DashboardPage } from "./DashboardPage";

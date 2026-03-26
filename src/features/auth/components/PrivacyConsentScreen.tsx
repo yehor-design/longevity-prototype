@@ -2,6 +2,7 @@ import { useState } from "react";
 import caretLeftSvg from "@/assets/auth/caret-left.svg";
 import { AuthHeroPanel } from "./AuthHeroPanel";
 import { AuthBottomBadges } from "./AuthBottomBadges";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 
@@ -91,13 +92,9 @@ function ConsentCard({ item, checked, onToggle }: ConsentCardProps) {
           </span>
 
           {item.required ? (
-            <span className="inline-flex h-5 items-center justify-center whitespace-nowrap rounded-md border border-[#a7f3d0] bg-[#d1fae5] px-1.5 text-xs font-medium leading-5 text-[#065f46]">
-              Required
-            </span>
+            <Badge variant="success" className="">Required</Badge>
           ) : (
-            <span className="inline-flex h-5 items-center justify-center whitespace-nowrap rounded-md border border-[#e4e4e7] bg-[#f4f4f5] px-1.5 text-xs font-medium leading-5 text-[#52525b]">
-              Optional
-            </span>
+            <Badge variant="neutral" className="">Optional</Badge>
           )}
         </div>
 

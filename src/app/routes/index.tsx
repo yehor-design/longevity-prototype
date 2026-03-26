@@ -7,6 +7,7 @@ import { DoctorLayout } from "@/app/layouts/DoctorLayout";
 import { PrototypeAuthGuard } from "./PrototypeAuthGuard";
 import { PlaceholderPage } from "./PlaceholderPage";
 import { DevPage } from "@/features/dev/DevPage";
+import { DashboardPage } from "@/features/dashboard";
 import { WelcomePage } from "@/features/auth/pages/WelcomePage";
 import { RegisterVerifyPage } from "@/features/auth/pages/RegisterVerifyPage";
 import { LoginEmailPage } from "@/features/auth/pages/LoginEmailPage";
@@ -60,7 +61,7 @@ export const router = createBrowserRouter([
           </PrototypeAuthGuard>
         ),
         children: [
-          { path: "/app/dashboard", element: <PlaceholderPage title="Dashboard" /> },
+          { path: "/app/dashboard", element: <DashboardPage /> },
           { path: "/app/questionnaire", element: <PlaceholderPage title="Questionnaire" /> },
           { path: "/app/tests", element: <PlaceholderPage title="My Tests" /> },
           { path: "/app/test/:testType/:id", element: <PlaceholderPage title="Test Analysis" /> },

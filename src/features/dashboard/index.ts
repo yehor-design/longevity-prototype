@@ -1,1 +1,2 @@
-/** dashboard feature — barrel export. Expand as pages are built. */
+export { DashboardPage } from "./pages/DashboardPage";
+export { HealthAssistantPanel } from "./components/HealthAssistantPanel";
