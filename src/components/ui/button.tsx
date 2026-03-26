@@ -22,9 +22,15 @@ const buttonVariants = cva(
           "dark:bg-emerald-600 dark:border-white/5 dark:before:hidden",
         ].join(" "),
 
-        // DESTRUCTIVE — danger action
-        destructive:
-          "border-transparent bg-destructive text-white shadow-sm hover:bg-destructive/90 active:bg-destructive dark:bg-destructive/70",
+        // DESTRUCTIVE — Catalyst red solid
+        destructive: [
+          "border-transparent text-white",
+          "bg-red-700/90",
+          "before:absolute before:inset-0 before:-z-10 before:rounded-[calc(var(--radius-lg)-1px)] before:bg-red-600 before:shadow-sm",
+          "after:absolute after:inset-0 after:-z-10 after:rounded-[calc(var(--radius-lg)-1px)] after:shadow-[inset_0_1px_rgba(255,255,255,0.15)]",
+          "hover:after:bg-white/10 active:after:bg-white/[0.15]",
+          "dark:bg-red-600 dark:border-white/5 dark:before:hidden",
+        ].join(" "),
 
         // OUTLINE — Catalyst outline (secondary action)
         outline: [
@@ -33,9 +39,16 @@ const buttonVariants = cva(
           "dark:border-white/15 dark:text-white dark:hover:bg-white/5 dark:active:bg-white/10",
         ].join(" "),
 
-        // SECONDARY — subtle filled
-        secondary:
-          "border-transparent bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
+        // SECONDARY — Catalyst white solid
+        // Same depth technique as primary: button bg = faint zinc frame, before: = white surface
+        secondary: [
+          "border-transparent text-zinc-950",
+          "bg-zinc-950/10",
+          "before:absolute before:inset-0 before:-z-10 before:rounded-[calc(var(--radius-lg)-1px)] before:bg-white before:shadow-sm",
+          "after:absolute after:inset-0 after:-z-10 after:rounded-[calc(var(--radius-lg)-1px)] after:shadow-[inset_0_1px_rgba(255,255,255,0.15)]",
+          "hover:after:bg-zinc-950/[2.5%] active:after:bg-zinc-950/5",
+          "dark:bg-white dark:border-white/5 dark:before:hidden dark:hover:after:bg-zinc-950/5",
+        ].join(" "),
 
         // GHOST / PLAIN — Catalyst plain (tertiary action)
         ghost: [
