@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Send, Mic, MessageCircle, Info, AlertTriangle } from "lucide-react";
+import { Send, MessageCircle, Info, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -53,10 +53,10 @@ function AssistantMessage({ content }: { content: string }) {
           dangerouslySetInnerHTML={{ __html: content }}
         />
         <div className="flex flex-col gap-2">
-          <Button className="w-full rounded-xl h-9 text-sm font-medium">
+          <Button className="w-full h-9 text-sm">
             Add both to plan
           </Button>
-          <Button variant="outline" className="w-full rounded-xl h-9 text-sm font-medium">
+          <Button variant="outline" className="w-full h-9 text-sm">
             Show alternatives
           </Button>
         </div>
@@ -181,12 +181,9 @@ export function HealthAssistantPanel() {
             placeholder="Ask about your health..."
             className="flex-1 border-0 shadow-none focus-visible:ring-0 h-8 text-sm px-0"
           />
-          <Button variant="ghost" size="icon" className="size-7 shrink-0">
-            <Mic size={14} className="text-muted-foreground" />
-          </Button>
           <Button
             size="icon"
-            className="size-7 shrink-0 rounded-full"
+            className="size-7 shrink-0"
             onClick={handleSend}
           >
             <Send size={14} />

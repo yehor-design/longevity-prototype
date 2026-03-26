@@ -54,7 +54,7 @@ export function DnaInsightsCard() {
 
       {/* CTA */}
       <div className="px-4 pb-4 pt-4 mt-auto">
-        <Button variant="outline" className="w-full rounded-xl h-11 text-sm font-medium">
+        <Button variant="outline" className="w-full h-11 text-sm">
           Explore DNA Profile
         </Button>
       </div>

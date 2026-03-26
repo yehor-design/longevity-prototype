@@ -5,20 +5,47 @@ import { Slot } from "radix-ui"
 import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
-  "inline-flex shrink-0 items-center justify-center gap-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+  // Base: Catalyst foundation — relative isolate required for primary pseudo-element depth effect
+  "relative isolate inline-flex shrink-0 items-center justify-center gap-x-2 rounded-lg border text-sm/6 font-semibold whitespace-nowrap transition-all focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500 disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 active:scale-[0.98]",
+        // PRIMARY — Catalyst emerald solid
+        // Uses before: (emerald surface + shadow) and after: (inset white highlight + hover overlay)
+        // Button bg shows as subtle darker frame at edges (1px radius difference from before:)
+        default: [
+          "border-transparent text-white",
+          "bg-emerald-700/90",
+          "before:absolute before:inset-0 before:-z-10 before:rounded-[calc(var(--radius-lg)-1px)] before:bg-emerald-600 before:shadow-sm",
+          "after:absolute after:inset-0 after:-z-10 after:rounded-[calc(var(--radius-lg)-1px)] after:shadow-[inset_0_1px_rgba(255,255,255,0.15)]",
+          "hover:after:bg-white/10 active:after:bg-white/[0.15]",
+          "dark:bg-emerald-600 dark:border-white/5 dark:before:hidden",
+        ].join(" "),
+
+        // DESTRUCTIVE — danger action
         destructive:
-          "bg-destructive text-white shadow-xs hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:bg-destructive/60 dark:focus-visible:ring-destructive/40",
-        outline:
-          "border border-input bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50",
+          "border-transparent bg-destructive text-white shadow-sm hover:bg-destructive/90 active:bg-destructive dark:bg-destructive/70",
+
+        // OUTLINE — Catalyst outline (secondary action)
+        outline: [
+          "border-zinc-950/10 bg-transparent text-zinc-950",
+          "hover:bg-zinc-950/[2.5%] active:bg-zinc-950/5",
+          "dark:border-white/15 dark:text-white dark:hover:bg-white/5 dark:active:bg-white/10",
+        ].join(" "),
+
+        // SECONDARY — subtle filled
         secondary:
-          "bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80",
-        ghost:
-          "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
-        link: "text-primary underline-offset-4 hover:underline",
+          "border-transparent bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
+
+        // GHOST / PLAIN — Catalyst plain (tertiary action)
+        ghost: [
+          "border-transparent bg-transparent text-zinc-700",
+          "hover:bg-zinc-950/5 active:bg-zinc-950/[7.5%]",
+          "dark:text-zinc-400 dark:hover:bg-white/10 dark:active:bg-white/10",
+        ].join(" "),
+
+        // LINK
+        link: "border-transparent text-primary underline-offset-4 hover:underline",
       },
       size: {
         default: "h-10 px-4 py-2 has-[>svg]:px-3",
