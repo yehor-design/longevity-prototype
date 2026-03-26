@@ -46,6 +46,18 @@
   --color-health-borderline: var(--health-borderline);
   --color-health-elevated: var(--health-elevated);
   --color-health-critical: var(--health-critical);
+
+  /* Alert semantic colors */
+  --color-alert-info: var(--alert-info);
+  --color-alert-info-foreground: var(--alert-info-foreground);
+  --color-alert-success: var(--alert-success);
+  --color-alert-success-foreground: var(--alert-success-foreground);
+  --color-alert-warning: var(--alert-warning);
+  --color-alert-warning-foreground: var(--alert-warning-foreground);
+  --color-alert-error: var(--alert-error);
+  --color-alert-error-foreground: var(--alert-error-foreground);
+  --color-alert-system: var(--alert-system);
+  --color-alert-system-foreground: var(--alert-system-foreground);
 }
 
 :root {
@@ -94,6 +106,24 @@
   --health-borderline: oklch(0.769 0.188 70.08);
   --health-elevated: oklch(0.714 0.203 47.604);
   --health-critical: oklch(0.577 0.245 27.325);
+
+  /* Alert semantic colors */
+  /* Borders are border-current/8 in the component (currentColor at 8% opacity via color-mix) */
+  /* Info: calm blue, informational */
+  --alert-info: oklch(0.965 0.02 240);
+  --alert-info-foreground: oklch(0.32 0.15 240);
+  /* Success: emerald, matching project primary */
+  --alert-success: oklch(0.965 0.024 162);
+  --alert-success-foreground: oklch(0.32 0.12 162);
+  /* Warning: amber, attention without alarm */
+  --alert-warning: oklch(0.975 0.03 85);
+  --alert-warning-foreground: oklch(0.4 0.14 65);
+  /* Error: red, same hue as destructive */
+  --alert-error: oklch(0.975 0.022 27);
+  --alert-error-foreground: oklch(0.42 0.2 27);
+  /* System: neutral gray, background messages */
+  --alert-system: oklch(0.96 0 0);
+  --alert-system-foreground: oklch(0.3 0 0);
 }
 
 .dark {
@@ -139,19 +169,33 @@
   --health-borderline: oklch(0.769 0.188 70.08);
   --health-elevated: oklch(0.714 0.203 47.604);
   --health-critical: oklch(0.704 0.191 22.216);
+
+  /* Alert semantic colors — dark mode (borders auto-derive via relative color from foreground) */
+  --alert-info: oklch(0.22 0.045 240);
+  --alert-info-foreground: oklch(0.78 0.14 240);
+  --alert-success: oklch(0.22 0.04 162);
+  --alert-success-foreground: oklch(0.76 0.14 162);
+  --alert-warning: oklch(0.22 0.04 85);
+  --alert-warning-foreground: oklch(0.84 0.16 85);
+  --alert-error: oklch(0.22 0.04 27);
+  --alert-error-foreground: oklch(0.78 0.18 27);
+  --alert-system: oklch(0.25 0 0);
+  --alert-system-foreground: oklch(0.78 0 0);
 }
 
-* {
-  border-color: var(--border);
-  outline-color: var(--ring);
-}
+@layer base {
+  * {
+    border-color: var(--border);
+    outline-color: var(--ring);
+  }
 
-body {
-  background-color: var(--background);
-  color: var(--foreground);
-  font-family: "Inter", system-ui, -apple-system, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: "Inter", system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
 }
 
 /* Scrollbar styling */

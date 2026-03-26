@@ -5,19 +5,18 @@ import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { chatMessages, suggestedQuestions } from "../data/mockData";
 
 function PriorityAlert() {
   return (
-    <div className="flex gap-2 rounded-xl bg-red-50 border border-red-100 p-3">
-      <AlertTriangle size={14} className="text-red-500 shrink-0 mt-0.5" />
-      <div className="flex flex-col gap-0.5">
-        <span className="text-xs font-semibold text-red-700">Priority Alert</span>
-        <span className="text-[11px] leading-4 text-red-600">
-          Fasting Glucose at <strong>7.2 mmol/L</strong> — above clinical threshold
-        </span>
-      </div>
-    </div>
+    <Alert variant="error" className="rounded-xl">
+      <AlertTriangle />
+      <AlertTitle className="text-xs">Priority Alert</AlertTitle>
+      <AlertDescription className="text-[11px] leading-4">
+        Fasting Glucose at <strong>7.2 mmol/L</strong> — above clinical threshold
+      </AlertDescription>
+    </Alert>
   );
 }
 
