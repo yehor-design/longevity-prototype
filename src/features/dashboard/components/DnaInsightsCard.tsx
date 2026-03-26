@@ -31,7 +31,7 @@ export function DnaInsightsCard() {
   const { hasHighRisk, insights } = dnaInsightsData;
 
   return (
-    <Card className="flex flex-col rounded-2xl border-border shadow-sm p-0 overflow-hidden">
+    <Card className="rounded-2xl p-0 overflow-hidden">
       {/* Header */}
       <div className="flex items-center justify-between px-4 pt-4 pb-3">
         <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">

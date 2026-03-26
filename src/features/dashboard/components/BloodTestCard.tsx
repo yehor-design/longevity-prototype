@@ -263,7 +263,7 @@ export function BloodTestCard({ test }: { test: BloodTest }) {
         : "text-health-critical";
 
   return (
-    <Card className="flex flex-col rounded-2xl border-border shadow-sm p-0 overflow-hidden gap-0">
+    <Card className="rounded-2xl p-0 overflow-hidden gap-0">
       {/* Header */}
       <div className="flex items-start justify-between px-4 pt-4 pb-2">
         <div className="flex items-center gap-2 min-w-0">

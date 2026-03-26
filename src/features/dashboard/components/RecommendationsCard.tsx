@@ -45,7 +45,7 @@ function RecommendationItem({ rec }: { rec: Recommendation }) {
 
 export function RecommendationsCard() {
   return (
-    <Card className="flex flex-col rounded-2xl border-border shadow-sm p-0 overflow-hidden">
+    <Card className="rounded-2xl p-0 overflow-hidden">
       {/* Header */}
       <div className="flex items-start gap-3 px-4 pt-3">
         <div className="flex items-center justify-center size-10 rounded-xl border border-border bg-white shadow-sm shrink-0">

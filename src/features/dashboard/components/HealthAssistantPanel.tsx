@@ -7,6 +7,7 @@ import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { chatMessages, suggestedQuestions } from "../data/mockData";
+import type { SuggestedQuestion } from "../data/mockData";
 
 function PriorityAlert() {
   return (
@@ -64,11 +65,63 @@ function AssistantMessage({ content }: { content: string }) {
   );
 }
 
+function SuggestedQuestions({
+  questions,
+  onSelect,
+}: {
+  questions: SuggestedQuestion[];
+  onSelect: (text: string) => void;
+}) {
+  return (
+    <div className="pt-1">
+      <div className="flex items-center gap-1.5 mb-2">
+        <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+          Suggested Questions
+        </span>
+        <Info size={12} className="text-muted-foreground" />
+      </div>
+      <div className="flex flex-col gap-1.5">
+        {questions.map((q) => (
+          <button
+            key={q.id}
+            onClick={() => onSelect(q.text)}
+            className="flex items-start gap-2 text-left rounded-lg px-2 py-1.5 hover:bg-muted transition-colors group"
+          >
+            <MessageCircle size={12} className="text-primary shrink-0 mt-0.5" />
+            <span className="text-xs text-foreground/80 leading-4 group-hover:text-foreground">
+              {q.text}
+            </span>
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export function HealthAssistantPanel() {
   const [inputValue, setInputValue] = useState("");
+  const [messages, setMessages] = useState(chatMessages);
+
+  const hasDialog = messages.length > 0;
+  const lastMessageIsAssistant =
+    hasDialog && messages[messages.length - 1].role === "assistant";
+
+  function handleSelectQuestion(text: string) {
+    setInputValue(text);
+  }
+
+  function handleSend() {
+    const trimmed = inputValue.trim();
+    if (!trimmed) return;
+    setMessages((prev) => [
+      ...prev,
+      { id: String(Date.now()), role: "user", content: trimmed },
+    ]);
+    setInputValue("");
+  }
 
   return (
-    <div className="flex flex-col h-full border-l border-border bg-background">
+    <div className="flex flex-col h-full border-l border-border bg-background relative">
       {/* Header */}
       <div className="flex items-center gap-3 px-4 py-3 shrink-0">
         <div className="flex items-center justify-center size-10 rounded-full bg-primary/10">
@@ -85,9 +138,9 @@ export function HealthAssistantPanel() {
 
       <Separator />
 
-      {/* Chat area */}
+      {/* Scrollable chat — content slides under the fixed input bar */}
       <ScrollArea className="flex-1 min-h-0">
-        <div className="flex flex-col gap-4 p-4">
+        <div className="flex flex-col gap-4 p-4 pb-24">
           {/* Greeting */}
           <p className="text-sm text-muted-foreground">
             Good afternoon, <strong className="text-foreground">Elena</strong>. Here&apos;s your
@@ -98,66 +151,52 @@ export function HealthAssistantPanel() {
           <PriorityAlert />
 
           {/* Messages */}
-          {chatMessages.map((msg) =>
+          {messages.map((msg) =>
             msg.role === "user" ? (
               <UserMessage key={msg.id} content={msg.content} timestamp={msg.timestamp} />
             ) : (
               <AssistantMessage key={msg.id} content={msg.content} />
             )
           )}
+
+          {/* Suggested questions appear after the last assistant reply */}
+          {lastMessageIsAssistant && (
+            <SuggestedQuestions
+              questions={suggestedQuestions}
+              onSelect={handleSelectQuestion}
+            />
+          )}
         </div>
       </ScrollArea>
 
-      {/* Suggested questions */}
-      <div className="px-4 pb-3 shrink-0">
-        <div className="flex items-center gap-1.5 mb-2">
-          <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
-            Suggested Questions
-          </span>
-          <Info size={12} className="text-muted-foreground" />
+      {/* Fixed input bar — highest z-index, content scrolls beneath it */}
+      <div className="absolute bottom-0 left-0 right-0 z-50 bg-background">
+        <Separator />
+        <div className="flex items-center gap-2 px-3 py-3">
+          <MessageCircle size={16} className="text-muted-foreground shrink-0" />
+          <Input
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleSend()}
+            placeholder="Ask about your health..."
+            className="flex-1 border-0 shadow-none focus-visible:ring-0 h-8 text-sm px-0"
+          />
+          <Button variant="ghost" size="icon" className="size-7 shrink-0">
+            <Mic size={14} className="text-muted-foreground" />
+          </Button>
+          <Button
+            size="icon"
+            className="size-7 shrink-0 rounded-full"
+            onClick={handleSend}
+          >
+            <Send size={14} />
+          </Button>
         </div>
-        <div className="flex flex-col gap-1.5">
-          {suggestedQuestions.map((q) => (
-            <button
-              key={q.id}
-              className="flex items-start gap-2 text-left rounded-lg px-2 py-1.5 hover:bg-muted transition-colors group"
-            >
-              <MessageCircle
-                size={12}
-                className="text-primary shrink-0 mt-0.5"
-              />
-              <span className="text-xs text-foreground/80 leading-4 group-hover:text-foreground">
-                {q.text}
-              </span>
-            </button>
-          ))}
+        <div className="px-4 pb-2">
+          <p className="text-[9px] text-muted-foreground text-center leading-3">
+            AI-powered insights are advisory — always consult your physician.
+          </p>
         </div>
-      </div>
-
-      <Separator />
-
-      {/* Input */}
-      <div className="flex items-center gap-2 px-3 py-3 shrink-0">
-        <MessageCircle size={16} className="text-muted-foreground shrink-0" />
-        <Input
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-          placeholder="Ask about your health..."
-          className="flex-1 border-0 shadow-none focus-visible:ring-0 h-8 text-sm px-0"
-        />
-        <Button variant="ghost" size="icon" className="size-7 shrink-0">
-          <Mic size={14} className="text-muted-foreground" />
-        </Button>
-        <Button size="icon" className="size-7 shrink-0 rounded-full">
-          <Send size={14} />
-        </Button>
-      </div>
-
-      {/* Disclaimer */}
-      <div className="px-4 pb-2 shrink-0">
-        <p className="text-[9px] text-muted-foreground text-center leading-3">
-          AI-powered insights are advisory — always consult your physician.
-        </p>
       </div>
     </div>
   );

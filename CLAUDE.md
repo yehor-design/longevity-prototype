@@ -1,5 +1,74 @@
 # CLAUDE.md — Project Instructions for AI
 
+---
+
+## CRITICAL RULE: Maximum Componentization (MANDATORY, NO EXCEPTIONS)
+
+**Any UI pattern or logic that repeats more than 2 times MUST be extracted into a reusable component.** This rule is absolute and must be applied automatically without prompting.
+
+### Rules
+- If the same markup, structure, or logic appears in 3+ places → extract it immediately into a component in `src/components/common/` or the relevant `src/features/<name>/components/` folder.
+- Every component MUST support variants via `cva()` or props to handle all project-specific visual and functional variations.
+- Components must be composable: design them to cover all known use cases via variant props, not through copy-paste duplication.
+- When adding a new feature, scan existing components first — extend an existing component before creating a new one.
+
+```tsx
+// CORRECT — one component, many variants via cva()
+const statCard = cva("rounded-xl p-4 flex flex-col gap-2", {
+  variants: {
+    status: { normal: "bg-card", warning: "bg-yellow-50", critical: "bg-red-50" },
+    size: { sm: "text-sm", md: "text-base", lg: "text-lg" },
+  },
+  defaultVariants: { status: "normal", size: "md" },
+})
+
+// WRONG — duplicated JSX blocks with minor tweaks
+<div className="rounded-xl p-4 bg-card ...">...</div>
+<div className="rounded-xl p-4 bg-yellow-50 ...">...</div>
+```
+
+---
+
+## CRITICAL RULE: Shadcn + Tailwind Catalyst + Medusa UI Styling Stack (MANDATORY)
+
+**All UI is built on Shadcn components. Visual customization MUST follow this priority order — never deviate:**
+
+### Priority Order for Styling Shadcn Components
+
+| Priority | Library | Use when |
+|---|---|---|
+| 1 | **Tailwind CSS Catalyst** (https://catalyst.tailwindui.com/docs) | Tailwind Catalyst provides a style/pattern for this component |
+| 2 | **Medusa UI** (https://docs.medusajs.com/ui) | Tailwind Catalyst has no style for this component, but Medusa UI does |
+| 3 | Custom `className` overrides | Neither library covers this specific case |
+
+### Rules
+- Always check Tailwind CSS Catalyst first for component styling patterns — it is the primary visual reference.
+- If Tailwind Catalyst does not have a pattern for a given component (e.g. `Avatar`), fall back to Medusa UI styles.
+- Never skip both libraries and go straight to custom CSS — always verify both sources first.
+- Apply styles via `className` on Shadcn components, or extend `cva()` variants in `src/components/ui/`. Never duplicate a Shadcn component file.
+
+```tsx
+// CORRECT — Shadcn base + Tailwind Catalyst visual pattern
+<Button className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-primary/90">
+  Save changes
+</Button>
+
+// CORRECT — Shadcn Avatar + Medusa UI style (Catalyst has no Avatar)
+<Avatar className="size-8 rounded-full ring-2 ring-white">
+  <AvatarImage src={user.avatar} />
+  <AvatarFallback className="bg-ui-bg-subtle text-ui-fg-subtle text-xs font-medium">
+    {initials}
+  </AvatarFallback>
+</Avatar>
+
+// WRONG — custom component ignoring both libraries
+<div className="w-8 h-8 rounded-full overflow-hidden border-2 border-white">
+  <img src={user.avatar} />
+</div>
+```
+
+---
+
 ## CRITICAL RULE: Always Use Shadcn UI Components
 
 **Every UI element in this project MUST use the native Shadcn UI component from `src/components/ui/`.** This rule is non-negotiable and applies to the entire codebase without exception.
@@ -266,3 +335,28 @@ src/
   lib/
     utils.ts      ← cn() helper (clsx + tailwind-merge)
 ```
+
+<!-- VERCEL BEST PRACTICES START -->
+## Best practices for developing on Vercel
+
+These defaults are optimized for AI coding agents (and humans) working on apps that deploy to Vercel.
+
+- Treat Vercel Functions as stateless + ephemeral (no durable RAM/FS, no background daemons), use Blob or marketplace integrations for preserving state
+- Edge Functions (standalone) are deprecated; prefer Vercel Functions
+- Don't start new projects on Vercel KV/Postgres (both discontinued); use Marketplace Redis/Postgres instead
+- Store secrets in Vercel Env Variables; not in git or `NEXT_PUBLIC_*`
+- Provision Marketplace native integrations with `vercel integration add` (CI/agent-friendly)
+- Sync env + project settings with `vercel env pull` / `vercel pull` when you need local/offline parity
+- Use `waitUntil` for post-response work; avoid the deprecated Function `context` parameter
+- Set Function regions near your primary data source; avoid cross-region DB/service roundtrips
+- Tune Fluid Compute knobs (e.g., `maxDuration`, memory/CPU) for long I/O-heavy calls (LLMs, APIs)
+- Use Runtime Cache for fast **regional** caching + tag invalidation (don't treat it as global KV)
+- Use Cron Jobs for schedules; cron runs in UTC and triggers your production URL via HTTP GET
+- Use Vercel Blob for uploads/media; Use Edge Config for small, globally-read config
+- If Enable Deployment Protection is enabled, use a bypass secret to directly access them
+- Add OpenTelemetry via `@vercel/otel` on Node; don't expect OTEL support on the Edge runtime
+- Enable Web Analytics + Speed Insights early
+- Use AI Gateway for model routing, set AI_GATEWAY_API_KEY, using a model string (e.g. 'anthropic/claude-sonnet-4.6'), Gateway is already default in AI SDK
+  needed. Always curl https://ai-gateway.vercel.sh/v1/models first; never trust model IDs from memory
+- For durable agent loops or untrusted code: use Workflow (pause/resume/state) + Sandbox; use Vercel MCP for secure infra access
+<!-- VERCEL BEST PRACTICES END -->
