@@ -12,7 +12,8 @@ import { Switch } from "@/components/ui/switch";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Alert, AlertAction, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Info, CheckCircle2, AlertTriangle, XCircle, Bell } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -390,15 +391,81 @@ export function DevPage() {
 
               <Card>
                 <CardHeader><CardTitle className="text-base">Alerts</CardTitle></CardHeader>
-                <CardContent className="space-y-3">
-                  <Alert>
-                    <AlertTitle>Heads up!</AlertTitle>
-                    <AlertDescription>This is a default alert with some information.</AlertDescription>
-                  </Alert>
-                  <Alert variant="destructive">
-                    <AlertTitle>Error</AlertTitle>
-                    <AlertDescription>Your session has expired. Please log in again.</AlertDescription>
-                  </Alert>
+                <CardContent className="space-y-6">
+                  {/* Without action */}
+                  <div className="space-y-3">
+                    <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Without action</p>
+                    <Alert variant="info">
+                      <Info />
+                      <AlertTitle>Information</AlertTitle>
+                      <AlertDescription>Your next lab results will be available in 2 days.</AlertDescription>
+                    </Alert>
+                    <Alert variant="success">
+                      <CheckCircle2 />
+                      <AlertTitle>Success</AlertTitle>
+                      <AlertDescription>Your health plan has been updated successfully.</AlertDescription>
+                    </Alert>
+                    <Alert variant="warning">
+                      <AlertTriangle />
+                      <AlertTitle>Warning</AlertTitle>
+                      <AlertDescription>Your vitamin D levels are slightly below the optimal range.</AlertDescription>
+                    </Alert>
+                    <Alert variant="error">
+                      <XCircle />
+                      <AlertTitle>Error</AlertTitle>
+                      <AlertDescription>Your session has expired. Please log in again.</AlertDescription>
+                    </Alert>
+                    <Alert variant="system">
+                      <Bell />
+                      <AlertTitle>System</AlertTitle>
+                      <AlertDescription>Scheduled maintenance on Sunday from 2–4 AM UTC.</AlertDescription>
+                    </Alert>
+                  </div>
+
+                  {/* With action */}
+                  <div className="space-y-3">
+                    <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">With action</p>
+                    <Alert variant="info">
+                      <Info />
+                      <AlertTitle>Information</AlertTitle>
+                      <AlertDescription>Your next lab results will be available in 2 days.</AlertDescription>
+                      <AlertAction>
+                        <Button variant="ghost" size="sm" className="h-7 text-xs">View</Button>
+                      </AlertAction>
+                    </Alert>
+                    <Alert variant="success">
+                      <CheckCircle2 />
+                      <AlertTitle>Success</AlertTitle>
+                      <AlertDescription>Your health plan has been updated successfully.</AlertDescription>
+                      <AlertAction>
+                        <Button variant="ghost" size="sm" className="h-7 text-xs">Open</Button>
+                      </AlertAction>
+                    </Alert>
+                    <Alert variant="warning">
+                      <AlertTriangle />
+                      <AlertTitle>Warning</AlertTitle>
+                      <AlertDescription>Your vitamin D levels are slightly below the optimal range.</AlertDescription>
+                      <AlertAction>
+                        <Button variant="ghost" size="sm" className="h-7 text-xs">Review</Button>
+                      </AlertAction>
+                    </Alert>
+                    <Alert variant="error">
+                      <XCircle />
+                      <AlertTitle>Error</AlertTitle>
+                      <AlertDescription>Your session has expired. Please log in again.</AlertDescription>
+                      <AlertAction>
+                        <Button variant="ghost" size="sm" className="h-7 text-xs">Log in</Button>
+                      </AlertAction>
+                    </Alert>
+                    <Alert variant="system">
+                      <Bell />
+                      <AlertTitle>System</AlertTitle>
+                      <AlertDescription>Scheduled maintenance on Sunday from 2–4 AM UTC.</AlertDescription>
+                      <AlertAction>
+                        <Button variant="ghost" size="sm" className="h-7 text-xs">Dismiss</Button>
+                      </AlertAction>
+                    </Alert>
+                  </div>
                 </CardContent>
               </Card>
 

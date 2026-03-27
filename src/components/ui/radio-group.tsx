@@ -1,5 +1,4 @@
 import * as React from "react"
-import { CircleIcon } from "lucide-react"
 import { RadioGroup as RadioGroupPrimitive } from "radix-ui"
 
 import { cn } from "@/lib/utils"
@@ -25,16 +24,34 @@ function RadioGroupItem({
     <RadioGroupPrimitive.Item
       data-slot="radio-group-item"
       className={cn(
-        "aspect-square size-[1.125rem] shrink-0 rounded-full border border-input text-primary shadow-xs transition-[color,box-shadow] outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 data-[state=checked]:border-primary dark:bg-input/30 dark:aria-invalid:ring-destructive/40",
+        // Medusa UI pattern — transparent wrapper handles focus/disabled, inner span handles visuals
+        "group relative flex size-[1.125rem] shrink-0 cursor-pointer items-center justify-center outline-none",
+        "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-500",
+        "disabled:cursor-not-allowed disabled:opacity-50",
+        "aria-invalid:[&>span:first-child]:border-destructive",
         className
       )}
       {...props}
     >
+      {/* Visual circle — unchecked: white + zinc border; checked: emerald fill */}
+      <span
+        aria-hidden
+        className={cn(
+          "flex size-full items-center justify-center rounded-full border transition-all",
+          "border-zinc-950/15 bg-white",
+          "group-hover:border-zinc-950/30",
+          "group-data-[state=checked]:border-emerald-700 group-data-[state=checked]:bg-emerald-600",
+          "dark:border-white/15 dark:bg-white/5",
+          "dark:group-hover:border-white/25",
+          "dark:group-data-[state=checked]:border-emerald-500 dark:group-data-[state=checked]:bg-emerald-500",
+        )}
+      />
+      {/* White dot — only renders when checked (Radix Indicator) */}
       <RadioGroupPrimitive.Indicator
         data-slot="radio-group-indicator"
-        className="relative flex items-center justify-center"
+        className="absolute inset-0 flex items-center justify-center"
       >
-        <CircleIcon className="absolute top-1/2 left-1/2 size-2 -translate-x-1/2 -translate-y-1/2 fill-primary" />
+        <span className="size-1.5 rounded-full bg-white" />
       </RadioGroupPrimitive.Indicator>
     </RadioGroupPrimitive.Item>
   )
