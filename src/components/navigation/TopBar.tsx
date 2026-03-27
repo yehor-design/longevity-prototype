@@ -11,9 +11,11 @@ import {
   Coins,
   Menu,
 } from "lucide-react";
+import { useState } from "react";
 import { NavLink, useNavigate } from "react-router";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Switch } from "@/components/ui/switch";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -26,17 +28,16 @@ import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
 import { useAuthStore } from "@/stores/authStore";
 import { useThemeStore } from "@/stores/themeStore";
 import { useNavigationStore } from "@/stores/navigationStore";
+import { useQuestionnaireProgressStore } from "@/features/questionnaire/stores/questionnaireProgressStore";
+import { AvatarProgressCard } from "@/features/questionnaire/components/QuestionnaireProgressWidget";
 import { ROUTES } from "@/lib/constants";
 import { getDisplayName } from "@/types";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/useMediaQuery";
 
-interface NavItem {
-  label: string;
-  href: string;
-}
+// ─── Nav config ───────────────────────────────────────────────────────────────
 
-const PRIMARY_NAV: NavItem[] = [
+const PRIMARY_NAV = [
   { label: "Dashboard", href: ROUTES.DASHBOARD },
   { label: "Health Plan", href: ROUTES.QUESTIONNAIRE },
   { label: "My Tests", href: ROUTES.TESTS },
@@ -49,11 +50,13 @@ interface SecondaryNavItem {
 }
 
 const SECONDARY_NAV: SecondaryNavItem[] = [
-  { label: "Questionnaire", href: ROUTES.QUESTIONNAIRE, icon: ClipboardList },
+  // "Questionnaire" removed — the AvatarProgressCard in the dropdown serves this role
   { label: "Marketplace", href: ROUTES.MARKETPLACE, icon: ShoppingBag },
   { label: "Consultations", href: ROUTES.CONSULTATIONS, icon: Video },
   { label: "Token Wallet", href: ROUTES.TOKENS, icon: Coins },
 ];
+
+// ─── TopBar ───────────────────────────────────────────────────────────────────
 
 interface TopBarProps {
   className?: string;
@@ -63,16 +66,39 @@ export function TopBar({ className }: TopBarProps) {
   const { user, logout } = useAuthStore();
   const { resolvedTheme, toggleTheme } = useThemeStore();
   const { sidebarOpen, setSidebarOpen } = useNavigationStore();
+  const { progressPercentage, lastSavedDate, statusLabel, userAvatarUrl } =
+    useQuestionnaireProgressStore();
   const navigate = useNavigate();
   const isMobile = useIsMobile();
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
 
   const initials = user
     ? `${user.firstName?.[0] ?? ""}${user.lastName?.[0] ?? ""}`.toUpperCase() || "U"
     : "U";
+  const userName = user?.firstName || (user ? getDisplayName(user) : "My Health");
 
   const handleLogout = () => {
     logout();
     navigate(ROUTES.WELCOME);
+  };
+
+  const handleNavigateToQuestionnaire = () => navigate(ROUTES.QUESTIONNAIRE);
+
+  // Dropdown item click: block Radix, close menu, then navigate
+  const handleDropdownCardClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+    setUserMenuOpen(false);
+    setTimeout(handleNavigateToQuestionnaire, 80);
+  };
+
+  const sharedCardProps = {
+    initials,
+    progressPercentage,
+    statusLabel,
+    userName,
+    userAvatarUrl,
+    lastSavedDate,
   };
 
   return (
@@ -121,70 +147,87 @@ export function TopBar({ className }: TopBarProps) {
         </nav>
 
         {/* Right actions */}
-        <div className="flex items-center gap-1 ml-auto">
-          {/* Theme toggle */}
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={toggleTheme}
-            aria-label="Toggle theme"
-            className="size-8 rounded-lg"
-          >
-            {resolvedTheme === "dark" ? <Sun size={16} /> : <Moon size={16} />}
-          </Button>
-
+        <div className="flex items-center gap-2 ml-auto">
           {/* Notifications */}
-          <Button
-            variant="ghost"
-            size="icon"
-            aria-label="Notifications"
-            className="size-8 rounded-lg"
-          >
+          <Button variant="ghost" size="icon" aria-label="Notifications" className="size-8 rounded-lg">
             <Bell size={16} />
           </Button>
 
-          {/* Bio Age (desktop) */}
-          <div className="hidden md:flex flex-col items-end mr-1">
-            <span className="text-xs font-medium text-foreground leading-3">Bio Age: 32</span>
-            <span className="text-[10px] font-medium text-emerald-600 leading-3">-4 yrs</span>
-          </div>
+          {/* Token Wallet pill */}
+          <Button
+            variant="ghost"
+            onClick={() => navigate(ROUTES.TOKENS)}
+            aria-label="Token Wallet"
+            className={cn(
+              "hidden sm:flex items-center gap-1 h-6 rounded-full !px-1.5",
+              "border border-border/50 bg-muted/40",
+              "hover:bg-muted hover:border-border",
+              "text-[11px] font-medium text-muted-foreground hover:text-foreground transition-colors duration-150"
+            )}
+          >
+            <Coins size={11} className="text-muted-foreground shrink-0" />
+            <span className="tabular-nums">1&thinsp;250</span>
+          </Button>
 
-          {/* User avatar dropdown */}
-          <DropdownMenu>
+          {/* ── Zone A: AvatarProgressCard as DropdownMenuTrigger ── */}
+          <DropdownMenu open={userMenuOpen} onOpenChange={setUserMenuOpen}>
             <DropdownMenuTrigger asChild>
-              <Button
-                variant="ghost"
-                className="relative size-8 rounded-lg p-0"
-                aria-label="User menu"
+              <span
+                role="button"
+                tabIndex={0}
+                aria-label="Open user menu"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") setUserMenuOpen(true);
+                }}
               >
-                <Avatar className="size-8 rounded-lg border-2 border-black/8">
-                  <AvatarFallback className="text-[10px] font-medium bg-primary text-primary-foreground rounded-lg">
-                    {initials}
-                  </AvatarFallback>
-                </Avatar>
-              </Button>
+                {/* variant="trigger" — pill shape */}
+                <AvatarProgressCard {...sharedCardProps} variant="trigger" />
+              </span>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56">
+
+            <DropdownMenuContent align="end" className="w-64">
+
+              {/* User identity */}
               <DropdownMenuLabel className="font-normal">
-                <div className="flex flex-col space-y-1">
-                  <p className="text-sm font-medium leading-none">
-                    {user ? getDisplayName(user) : "Guest"}
-                  </p>
-                  <p className="text-xs leading-none text-muted-foreground">{user?.email}</p>
+                <div className="flex items-center gap-3">
+                  {/* Plain round avatar — no progress ring */}
+                  <Avatar className="size-9 rounded-full shrink-0">
+                    {userAvatarUrl && <AvatarImage src={userAvatarUrl} alt="Profile" />}
+                    <AvatarFallback className="rounded-full text-xs font-semibold bg-primary text-primary-foreground">
+                      {initials}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="flex flex-col space-y-1 min-w-0">
+                    <p className="text-sm font-medium leading-none truncate">
+                      {user ? getDisplayName(user) : "Guest"}
+                    </p>
+                    <p className="text-xs leading-none text-muted-foreground truncate">{user?.email}</p>
+                  </div>
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
 
-              {/* Mobile-only: primary nav items */}
-              {isMobile &&
-                PRIMARY_NAV.map((item) => (
-                  <DropdownMenuItem key={item.href} onClick={() => navigate(item.href)}>
-                    {item.label}
-                  </DropdownMenuItem>
-                ))}
+              {/* ── Zone B: AvatarProgressCard (menu variant) — navigates on click ── */}
+              <div className="px-1 pt-0.5 pb-1">
+                <button
+                  className="group w-full text-left rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  onClick={handleDropdownCardClick}
+                  aria-label="Open health questionnaire"
+                >
+                  <AvatarProgressCard {...sharedCardProps} variant="menu" />
+                </button>
+              </div>
+              <DropdownMenuSeparator />
+
+              {/* Mobile-only: primary nav */}
+              {isMobile && PRIMARY_NAV.map((item) => (
+                <DropdownMenuItem key={item.href} onClick={() => navigate(item.href)}>
+                  {item.label}
+                </DropdownMenuItem>
+              ))}
               {isMobile && <DropdownMenuSeparator />}
 
-              {/* Secondary nav items */}
+              {/* Secondary nav */}
               {SECONDARY_NAV.map((item) => {
                 const Icon = item.icon;
                 return (
@@ -195,6 +238,7 @@ export function TopBar({ className }: TopBarProps) {
                 );
               })}
               <DropdownMenuSeparator />
+
               <DropdownMenuItem onClick={() => navigate(ROUTES.PROFILE)}>
                 <UserCircle className="mr-2 h-4 w-4" />
                 My Profile
@@ -204,6 +248,27 @@ export function TopBar({ className }: TopBarProps) {
                 Settings
               </DropdownMenuItem>
               <DropdownMenuSeparator />
+
+              {/* Theme toggle — onSelect prevented to keep menu open */}
+              <DropdownMenuItem
+                className="flex items-center justify-between cursor-default focus:bg-accent"
+                onSelect={(e) => e.preventDefault()}
+              >
+                <div className="flex items-center gap-2">
+                  {resolvedTheme === "dark"
+                    ? <Moon size={14} className="text-muted-foreground" />
+                    : <Sun size={14} className="text-muted-foreground" />}
+                  <span>Dark mode</span>
+                </div>
+                <Switch
+                  checked={resolvedTheme === "dark"}
+                  onCheckedChange={toggleTheme}
+                  aria-label="Toggle dark mode"
+                  className="ml-auto scale-90"
+                />
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+
               <DropdownMenuItem
                 className="text-destructive focus:text-destructive"
                 onClick={handleLogout}
@@ -230,9 +295,7 @@ export function TopBar({ className }: TopBarProps) {
                   className={({ isActive }) =>
                     cn(
                       "px-3 py-2.5 rounded-lg text-sm font-medium transition-colors",
-                      isActive
-                        ? "bg-primary text-primary-foreground"
-                        : "text-foreground hover:bg-muted"
+                      isActive ? "bg-primary text-primary-foreground" : "text-foreground hover:bg-muted"
                     )
                   }
                 >
@@ -249,9 +312,7 @@ export function TopBar({ className }: TopBarProps) {
                     className={({ isActive }) =>
                       cn(
                         "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors",
-                        isActive
-                          ? "bg-primary text-primary-foreground"
-                          : "text-foreground hover:bg-muted"
+                        isActive ? "bg-primary text-primary-foreground" : "text-foreground hover:bg-muted"
                       )
                     }
                   >
