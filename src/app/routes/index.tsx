@@ -7,7 +7,7 @@ import { DoctorLayout } from "@/app/layouts/DoctorLayout";
 import { PrototypeAuthGuard } from "./PrototypeAuthGuard";
 import { PlaceholderPage } from "./PlaceholderPage";
 import { DevPage } from "@/features/dev/DevPage";
-import { DashboardPage } from "@/features/dashboard";
+import { DashboardPage, LipidPanelPage } from "@/features/dashboard";
 import { WelcomePage } from "@/features/auth/pages/WelcomePage";
 import { RegisterVerifyPage } from "@/features/auth/pages/RegisterVerifyPage";
 import { LoginEmailPage } from "@/features/auth/pages/LoginEmailPage";
@@ -64,7 +64,7 @@ export const router = createBrowserRouter([
           { path: "/app/dashboard", element: <DashboardPage /> },
           { path: "/app/questionnaire", element: <PlaceholderPage title="Questionnaire" /> },
           { path: "/app/tests", element: <PlaceholderPage title="My Tests" /> },
-          { path: "/app/test/:testType/:id", element: <PlaceholderPage title="Test Analysis" /> },
+          { path: "/app/test/:testType/:id", element: <LipidPanelPage /> },
           { path: "/app/marketplace", element: <PlaceholderPage title="Marketplace" /> },
           { path: "/app/marketplace/:id", element: <PlaceholderPage title="Product Detail" /> },
           { path: "/app/consultations", element: <PlaceholderPage title="Consultations" /> },

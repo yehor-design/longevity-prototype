@@ -1,4 +1,5 @@
 import { useRef, useState, useEffect, useId } from "react";
+import { useNavigate } from "react-router";
 import {
   ArrowRight,
   Droplets,
@@ -254,6 +255,7 @@ function FlagIcon({ flag }: { flag?: SubMetric["flag"] }) {
 // ─── Blood Test Card ───────────────────────────────────────────────────────────
 
 export function BloodTestCard({ test }: { test: BloodTest }) {
+  const navigate = useNavigate();
   const Icon = testIcons[test.id] ?? FlaskConical;
   const trendColor =
     test.status === "normal"
@@ -339,6 +341,7 @@ export function BloodTestCard({ test }: { test: BloodTest }) {
           variant="link"
           size="sm"
           className="h-auto p-0 text-xs font-medium text-primary gap-1"
+          onClick={() => navigate(`/app/test/${test.id}/${test.id}`)}
         >
           View Full Results
           <ArrowRight size={12} />
